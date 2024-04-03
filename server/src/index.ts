@@ -1,15 +1,16 @@
 import express from 'express';
 import cors from 'cors';
+import bcrypt from 'bcrypt';
+import bodyParser from 'body-parser'
 
 const app = express();
-const PORT = 3001;
+const port = 3001;
 
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-app.get('/', (_, res) => {
-  res.send('Servidor Express está rodando na porta 3001');
-});
-
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+app.listen(port, () => {
+  console.log(`Servidor rodando na porta ${port}`);
 });
