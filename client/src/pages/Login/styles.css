@@ -67,6 +67,10 @@
     border-radius: 10px;
 }
 
+.inputContainer input:hover {
+    border: 2px solid #4e85eb;
+}
+
 .container form a {
     display: flex;
     align-items:end;
@@ -92,7 +96,7 @@
     opacity: 0.7;
 }
 
-.container form .footer {
+.footer {
     display: flex;
     align-items: center;
     justify-content: center;

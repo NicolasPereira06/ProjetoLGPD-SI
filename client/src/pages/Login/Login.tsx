@@ -1,4 +1,4 @@
-import Auth from "../auth";
+import Auth from "../../components/auth";
 import logo from "../../logo.svg";
 import "./styles.css"
 
@@ -21,16 +21,18 @@ function Login() {
                             name="email"
                             id="email"
                             placeholder="teste@gmail.com"
+                            required
                         />
                     </div>
 
                     <div className="inputContainer">
-                        <label htmlFor="password">Senha</label>
+                        <label htmlFor="senha">Senha</label>
                         <input
                             type="password"
-                            name="password"
-                            id="password"
+                            name="senha"
+                            id="senha"
                             placeholder="*************"
+                            required
                         />
                     </div>
 
@@ -42,7 +44,7 @@ function Login() {
 
                     <div className="footer">
                         <p>Não tem uma conta?</p>
-                        <a href="#">Crie uma aqui!</a>
+                        <a href="/signup">Crie uma aqui!</a>
                     </div>
                 </form>
             </div>

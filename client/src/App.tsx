@@ -1,9 +1,9 @@
-import Login from "./components/Login/Login";
+import Rotas from './routes/Rotas';
 
 function App() {
   return (
     <div className="App">
-      <Login />
+      <Rotas />
     </div>
   );
 }
