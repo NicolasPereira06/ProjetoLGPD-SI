@@ -12,21 +12,31 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-color: azure;
 }
 
-.container .header {
+.main {
+    background-color: azure;
+    padding: 30px;
+    box-shadow: 0px 0px 10px #4e85eb;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.header {
     display: flex;
     align-items: center;
     flex-direction: column;
     margin-bottom: 30px;
 }
 
-.container .header img {
-    width: 400px;
+.header img {
+    width: 300px;
 }
 
-.container .header span {
+.header span {
     font-weight: 700;
     font-size: larger;
 }
@@ -37,20 +47,20 @@
     flex-direction: column;
 }
 
-.container form .inputContainer {
+.inputContainer {
     display: flex;
     align-items: flex-start;
     flex-direction: column;
     margin-bottom: 10px;
 }
 
-.container form .inputContainer label {
+.inputContainer label {
     font-weight: 400;
     font-size: medium;
     padding: 7px;
 }
 
-.container form .inputContainer input {
+.inputContainer input {
     padding: 10px;
     width: 500px;
     border: 1px solid #4e85eb;

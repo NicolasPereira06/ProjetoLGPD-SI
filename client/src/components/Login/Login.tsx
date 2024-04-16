@@ -5,46 +5,47 @@ import "./styles.css"
 function Login() {
     return (
         <div className="container">
-            <header className="header">
-                <img src={logo} alt="logo" />
-                <span>Entre com as suas informações de conexão</span>
-            </header>
-            
-            <Auth/>
+            <div className="main">
+                <header className="header">
+                    <img src={logo} alt="logo" />
+                    <span>Faça o seu Login</span>
+                </header>
 
-            <form>
-                <div className="inputContainer">
-                    <label htmlFor="email">E-mail</label>
-                    <input
-                        type="text"
-                        name="email"
-                        id="email"
-                        placeholder="teste@gmail.com" 
-                    />
-                </div>
+                <Auth />
 
-                <div className="inputContainer">
-                    <label htmlFor="password">Senha</label>
-                    <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        placeholder="*************" 
-                    />
-                </div>
+                <form>
+                    <div className="inputContainer">
+                        <label htmlFor="email">E-mail</label>
+                        <input
+                            type="text"
+                            name="email"
+                            id="email"
+                            placeholder="teste@gmail.com"
+                        />
+                    </div>
 
-                <a href="forgotPassword">Esqueceu a senha?</a>
+                    <div className="inputContainer">
+                        <label htmlFor="password">Senha</label>
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            placeholder="*************"
+                        />
+                    </div>
 
-                <button className="button">
-                    Entrar
-                </button>
+                    <a href="forgotPassword">Esqueceu a senha?</a>
 
-                <div className="footer">
-                    <p>Não tem uma conta?</p>
-                    <a href="#">Crie uma aqui!</a>
-                </div>
-            </form>
+                    <button className="button">
+                        Entrar
+                    </button>
 
+                    <div className="footer">
+                        <p>Não tem uma conta?</p>
+                        <a href="#">Crie uma aqui!</a>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 }
