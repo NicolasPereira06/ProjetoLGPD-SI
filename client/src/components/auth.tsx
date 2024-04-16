@@ -18,7 +18,7 @@ function Auth(){
                     onError={() => {
                         console.log('Login Failed');
                     }}
-                />;
+                />
             </GoogleOAuthProvider>
         </div>
     );
