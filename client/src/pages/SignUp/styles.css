@@ -12,6 +12,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    overflow: hidden; /* adicionado */
 }
 
 .main {
@@ -23,6 +24,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    overflow: hidden; /* adicionado */
 }
 
 .header {
@@ -39,6 +41,11 @@
 .header span {
     font-weight: 700;
     font-size: larger;
+}
+
+.formContainer { /* adicionado */
+    max-height: calc(45vh - 80px); /* ajuste conforme necessário */
+    overflow-y: auto; /* adicionado */
 }
 
 .container form {
