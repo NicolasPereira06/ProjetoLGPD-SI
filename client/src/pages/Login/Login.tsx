@@ -15,23 +15,23 @@ function Login() {
 
                 <form>
                     <div className="inputContainer">
-                        <label htmlFor="email">E-mail</label>
+                        <label htmlFor="email"></label>
                         <input
                             type="text"
                             name="email"
                             id="email"
-                            placeholder="teste@gmail.com"
+                            placeholder="Email"
                             required
                         />
                     </div>
 
                     <div className="inputContainer">
-                        <label htmlFor="senha">Senha</label>
+                        <label htmlFor="senha"></label>
                         <input
                             type="password"
                             name="senha"
                             id="senha"
-                            placeholder="*************"
+                            placeholder='Senha'
                             required
                         />
                     </div>
