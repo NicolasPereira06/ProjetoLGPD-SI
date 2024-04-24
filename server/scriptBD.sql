@@ -6,7 +6,7 @@ CREATE TABLE Users(
     user_last_name VARCHAR(50) NOT NULL,
     user_cpf VARCHAR(14) NULL,
     user_date_birth VARCHAR(10) NOT NULL,
-    user_address VARCHAR(500) NOT NULL,
+    user_address JSONB NOT NULL,
     user_email VARCHAR(50) NOT NULL,
     user_password VARCHAR(100) NOT NULL
 );
