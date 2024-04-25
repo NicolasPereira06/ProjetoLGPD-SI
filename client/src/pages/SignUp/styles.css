@@ -74,6 +74,29 @@
     border-radius: 10px;
 }
 
+.divTerms {
+    display: flex;
+    width: 60%;
+}
+
+.inputTerms {
+    width: 30px;
+    margin: 8px;
+}
+
+.inputTerms:hover {
+    cursor: pointer;
+}
+
+.divTerms span {
+    font-size: 13px;
+}
+
+.divTerms span a {
+    display: inline;
+    font-size: 13px;
+}
+
 .container form button {
     width: 260px;
     height: 45px;

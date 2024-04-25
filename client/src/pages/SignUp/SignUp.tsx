@@ -143,6 +143,18 @@ function Login() {
                             />
                         </div>
                     </div>
+                    <div className="divTerms">
+                        <input
+                            type="checkbox"
+                            name="termos"
+                            className="inputTerms"
+                            required
+                        />
+                        <span>
+                            Li e estou de acordo com o 
+                            <a href="/terms" >Termo de Uso e Politica de Privacidade</a>
+                        </span>
+                    </div>
 
                     <button className="button">
                         Cadastrar
