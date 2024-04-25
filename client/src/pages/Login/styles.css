@@ -51,7 +51,8 @@
     display: flex;
     align-items: flex-start;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin-top: 10px;
+
 }
 
 .inputContainer label {
@@ -101,4 +102,9 @@
     align-items: center;
     justify-content: center;
     width: 100%;
+}
+
+
+.esqueceusenha {
+    margin-top: 10px;
 }

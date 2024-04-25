@@ -151,7 +151,7 @@ function Login() {
                             required
                         />
                         <span>
-                            Li e estou de acordo com o 
+                            Li e estou de acordo com o
                             <a href="/terms" >Termo de Uso e Politica de Privacidade</a>
                         </span>
                     </div>
@@ -161,9 +161,11 @@ function Login() {
                     </button>
 
                     <div className="footer">
-                        <p>Voltar para o </p>
+                        <span>Voltar para o </span>
                         <a href="/login">Login</a>
                     </div>
+
+
                 </form>
             </div>
         </div>

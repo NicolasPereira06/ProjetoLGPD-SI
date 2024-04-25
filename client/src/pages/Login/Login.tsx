@@ -36,16 +36,18 @@ function Login() {
                         />
                     </div>
 
-                    <a href="forgotPassword">Esqueceu a senha?</a>
+                    <a className="esqueceusenha" href="forgotPassword">Esqueceu a senha?</a>
 
                     <button className="button">
                         Entrar
                     </button>
 
                     <div className="footer">
-                        <p>Não tem uma conta?</p>
+                        <span>Não tem uma conta? </span>
                         <a href="/signup">Crie uma aqui!</a>
                     </div>
+
+
                 </form>
             </div>
         </div>
