@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser'
 import SignUp from './Create/PostUser';
 import ReadUserID from './Read/GetUser';
