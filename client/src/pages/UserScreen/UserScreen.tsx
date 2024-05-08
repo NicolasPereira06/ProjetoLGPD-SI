@@ -31,6 +31,10 @@ const UserScreen: React.FC = () => {
                   <td>01/01/1990</td>
                 </tr>
                 <tr>
+                  <th>Email</th>
+                  <td>usuario1@example.com</td>
+                </tr>
+                <tr>
                   <th>Logradouro</th>
                   <td>Rua Exemplo</td>
                 </tr>
@@ -53,10 +57,6 @@ const UserScreen: React.FC = () => {
                 <tr>
                   <th>Estado</th>
                   <td>Estado Exemplo</td>
-                </tr>
-                <tr>
-                  <th>Email</th>
-                  <td>usuario1@example.com</td>
                 </tr>
                 <tr>
                   <th>Senha</th>
