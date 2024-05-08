@@ -8,14 +8,18 @@ function EditUser(): express.Router {
         try {
             const { user_id } = req.params;
             const {
+                user_first_name,
+                user_last_name,
+                user_cpf,
                 user_email,
-                user_date_birth,
                 user_address
             } = req.body;
 
             const updatedFields: { [key: string]: any } = {};
+            if (user_first_name !== undefined) updatedFields.user_first_name = user_first_name;
+            if (user_last_name !== undefined) updatedFields.user_last_name = user_last_name;
+            if (user_cpf !== undefined) updatedFields.user_cpf = user_cpf;
             if (user_email !== undefined) updatedFields.user_email = user_email;
-            if (user_date_birth !== undefined) updatedFields.user_date_birth = user_date_birth;
             if (user_address !== undefined) updatedFields.user_address = user_address;
 
             const fields = Object.keys(updatedFields);
