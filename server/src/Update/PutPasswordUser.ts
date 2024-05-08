@@ -10,10 +10,8 @@ function UpdatePassword(): express.Router {
             const { user_id } = req.params;
             const { user_senha, user_senha_atual } = req.body;            
 
-            let passwordFieldName;
+            let passwordFieldName = "user_password";
             let currentPassword;
-
-            passwordFieldName = "user_password";
 
             const user = await DB.query(`SELECT ${passwordFieldName} FROM Users WHERE user_id = $1`, [user_id]);
             currentPassword = user.rows[0][passwordFieldName];

@@ -6,6 +6,7 @@ import ReadUserID from './Read/GetUser';
 import EditUser from './Update/PutUser';
 import DeleteUser from './Delete/DeleteUser';
 import UpdatePassword from './Update/PutPasswordUser';
+import Login from './Auth/Login';
 
 const app = express();
 const port = 3001;
@@ -19,7 +20,16 @@ app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
 
-//CRUD - Users
+// Authentication
+
+//Login
+app.use('/Auth', Login())
+
+
+
+
+
+// CRUD - Users
 
 // Create
 app.use('/PostUser', SignUp())
@@ -27,9 +37,9 @@ app.use('/PostUser', SignUp())
 // Read
 app.use('/GetUser', ReadUserID())
 
-//Update
+// Update
 app.use('/PutUser', EditUser())
 app.use('/PutPasswordUser', UpdatePassword())
 
-//Delete
+// Delete
 app.use('/DeleteUser', DeleteUser())
