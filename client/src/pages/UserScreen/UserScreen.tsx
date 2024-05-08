@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import CustomDropdown from '../UserScreen/Dropdown';
 import '../UserScreen/userscreen.css';
 
 const UserScreen: React.FC = () => {
@@ -9,11 +9,7 @@ const UserScreen: React.FC = () => {
         <div className="user-screen">
           <div className="title-edit-container">
             <h1 className='title'>Meus dados</h1>
-            <DropdownButton id="dropdown-basic-button" title="Opções" variant="primary">
-              <Dropdown.Item href="#/action-1">Editar dados</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Mudar senha</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Excluir dados</Dropdown.Item>
-            </DropdownButton>
+            <CustomDropdown />
           </div>
           <div className="table-container">
             <table>
