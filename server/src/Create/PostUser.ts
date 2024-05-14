@@ -5,6 +5,9 @@ import DB from '../ConnectDB/db';
 function SignUp(): express.Router {
   const router = express.Router();
 
+  // Middleware para parsing de JSON
+  router.use(express.json());
+
   router.post('/SignUp', async (req, res) => {
     try {
       const {
@@ -20,8 +23,8 @@ function SignUp(): express.Router {
       const hashedPassword = await bcrypt.hash(user_password, 10);
 
       await DB.query(
-        'INSERT INTO Users (user_first_name, user_last_name, user_cpf, user_date_birth, user_address, user_email, user_password) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-        [user_first_name, user_last_name, user_cpf, user_date_birth, user_address, user_email, hashedPassword]
+        'INSERT INTO Users (user_first_name, user_last_name, user_cpf, user_date_birth, user_address, user_email, user_password) VALUES ($1, $2, $3, $4, $5::jsonb, $6, $7)',
+        [user_first_name, user_last_name, user_cpf, user_date_birth, JSON.stringify(user_address), user_email, hashedPassword]
       );
 
       res.status(200).json({ message: 'Usuário criado com sucesso' });

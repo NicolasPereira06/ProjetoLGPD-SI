@@ -4,7 +4,7 @@ import DB from '../ConnectDB/db';
 function DeleteUser(): express.Router {
     const router = express.Router();
 
-    router.delete('/DeleteUser/:user_id', async (req, res) => {
+    router.delete('/RemoveUser/:user_id', async (req, res) => {
         const { user_id } = req.params;
 
         try {
