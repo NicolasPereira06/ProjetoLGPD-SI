@@ -10,9 +10,6 @@ function Login() {
                     <img src={logo} alt="logo" />
                     <span>Faça o seu Login</span>
                 </header>
-
-                <Auth />
-
                 <form>
                     <div className="inputContainer">
                         <label htmlFor="email"></label>
