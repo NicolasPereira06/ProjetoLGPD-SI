@@ -72,7 +72,7 @@ function SignUp() {
 
             if(response.ok) {
                 const data = await response.json();
-                console.log(data);
+                alert('Cadastro feito com sucesso')
                 clearFields()
             }
 

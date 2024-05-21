@@ -1,8 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomDropdown from '../UserScreen/Dropdown';
 import '../UserScreen/userscreen.css';
 
 const UserScreen: React.FC = () => {
+  const [userData, setUserData] = useState<any>({});
+
+  const fetchUserData = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`http://localhost:3001/GetUser/User/${userId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setUserData(data);
+      } else {
+        console.error('Erro ao obter dados do usuário:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Erro ao obter dados do usuário:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
   return (
     <div className='container'>
       <div className='main'>
@@ -16,51 +37,47 @@ const UserScreen: React.FC = () => {
               <tbody>
                 <tr>
                   <th>Primeiro Nome</th>
-                  <td>Usuário 1</td>
+                  <td>{userData.user_first_name}</td>
                 </tr>
                 <tr>
                   <th>Último Nome</th>
-                  <td>Usuário 2</td>
+                  <td>{userData.user_last_name}</td>
                 </tr>
                 <tr>
                   <th>CPF</th>
-                  <td>123.456.789-00</td>
+                  <td>{userData.user_cpf}</td>
                 </tr>
                 <tr>
                   <th>Data de Nascimento</th>
-                  <td>01/01/1990</td>
+                  <td>{userData.user_date_birth}</td>
                 </tr>
                 <tr>
                   <th>Email</th>
-                  <td>usuario1@example.com</td>
+                  <td>{userData.user_email}</td>
                 </tr>
                 <tr>
                   <th>Logradouro</th>
-                  <td>Rua Exemplo</td>
+                  <td>{userData.user_address && userData.user_address.logradouro}</td>
                 </tr>
                 <tr>
                   <th>Número do Logradouro</th>
-                  <td>123</td>
+                  <td>{userData.user_address && userData.user_address.numero}</td>
                 </tr>
                 <tr>
                   <th>Bairro</th>
-                  <td>Bairro Exemplo</td>
+                  <td>{userData.user_address && userData.user_address.bairro}</td>
                 </tr>
                 <tr>
                   <th>CEP</th>
-                  <td>12345-678</td>
+                  <td>{userData.user_address && userData.user_address.cep}</td>
                 </tr>
                 <tr>
                   <th>Cidade</th>
-                  <td>Cidade Exemplo</td>
+                  <td>{userData.user_address && userData.user_address.cidade}</td>
                 </tr>
                 <tr>
                   <th>Estado</th>
-                  <td>Estado Exemplo</td>
-                </tr>
-                <tr>
-                  <th>Senha</th>
-                  <td>********</td>
+                  <td>{userData.user_address && userData.user_address.estado}</td>
                 </tr>
               </tbody>
             </table>
