@@ -5,6 +5,11 @@ import { useNavigate } from "react-router-dom";
 
 const CustomDropdown = () => {
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [logradouro, setLogradouro] = useState('');
+  const [bairro, setBairro] = useState('');
+  const [cidade, setCidade] = useState('');
+  const [estado, setEstado] = useState('');
   const [showEditDataModal, setShowEditDataModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSairModal, setShowSairModal] = useState(false);
@@ -56,19 +61,56 @@ const CustomDropdown = () => {
 
   const handleShowSairModal = () => setShowSairModal(true);
 
+  async function searchCEP(cep: string) {
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+      if (response.ok) {
+        setLogradouro(data.logradouro);
+        setBairro(data.bairro);
+        setCidade(data.localidade);
+        setEstado(data.uf);
+  
+        setFormData((prevFormData: any) => ({
+          ...prevFormData,
+          user_address: {
+            ...prevFormData.user_address,
+            logradouro: data.logradouro,
+            bairro: data.bairro,
+            cidade: data.localidade,
+            estado: data.uf,
+          },
+        }));
+      } else {
+        setErrorMessage('CEP não encontrado. Por favor, verifique o CEP digitado.');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar CEP:', error);
+      setErrorMessage('Erro ao buscar CEP. Por favor, tente novamente.');
+    }
+  }
+
   const handlePasswordChange = async () => {
     const userId = localStorage.getItem('userId');
-
+  
     const isEmpty = Object.values(passwordData).some(value => value === '' || value === null);
     if (isEmpty) {
       alert('Por favor, preencha todos os campos.');
       return;
     }
-
+  
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       alert('As senhas não coincidem');
       return;
     }
+  
+    // Verificação de senha
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{7,})/;
+    if (!passwordRegex.test(passwordData.newPassword)) {
+      alert('A nova senha deve ter pelo menos 7 caracteres, um caractere especial e uma letra maiúscula.');
+      return;
+    }
+  
     try {
       const response = await fetch(`http://localhost:3001/PutPasswordUser/UpdatePassword/${userId}`, {
         method: 'PUT',
@@ -80,7 +122,7 @@ const CustomDropdown = () => {
           user_senha: passwordData.newPassword,
         }),
       });
-
+  
       if (!response.ok) {
         const result = await response.json();
         alert(result.message);
@@ -90,15 +132,53 @@ const CustomDropdown = () => {
         alert(result.message);
         handleClose();
         window.location.reload();
-
       }
     } catch (error) {
       console.error('Erro ao atualizar senha do usuário:', error);
     }
   };
 
+  function formatCPF(cpf: string) {
+    // Remove caracteres não numéricos
+    cpf = cpf.replace(/\D/g, '');
+    
+    // Aplica a formatação
+    if (cpf.length <= 3) {
+      return cpf;
+    } else if (cpf.length <= 6) {
+      return `${cpf.slice(0, 3)}.${cpf.slice(3)}`;
+    } else if (cpf.length <= 9) {
+      return `${cpf.slice(0, 3)}.${cpf.slice(3, 6)}.${cpf.slice(6)}`;
+    } else {
+      return `${cpf.slice(0, 3)}.${cpf.slice(3, 6)}.${cpf.slice(6, 9)}-${cpf.slice(9, 11)}`;
+    }
+  }
+  
+  function formatCEP(cep: string) {
+    // Remove caracteres não numéricos
+    cep = cep.replace(/\D/g, '');
+  
+    // Aplica a formatação
+    if (cep.length <= 5) {
+      return cep;
+    } else {
+      return `${cep.slice(0, 5)}-${cep.slice(5, 8)}`;
+    }
+  }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
+    let formattedValue = value;
+  
+    if (id === 'user_cpf') {
+      formattedValue = formatCPF(value);
+    } else if (id === 'user_address.cep') {
+      formattedValue = formatCEP(value);
+      if (formattedValue.replace(/\D/g, '').length === 8) {  // CEP deve ter 8 dígitos
+        searchCEP(formattedValue.replace(/\D/g, ''));
+      }
+    }
+  
     const [field, subfield] = id.split('.');
     if (subfield) {
       // Handle nested fields
@@ -106,16 +186,17 @@ const CustomDropdown = () => {
         ...prevFormData,
         [field]: {
           ...prevFormData[field],
-          [subfield]: value,
+          [subfield]: formattedValue,
         },
       }));
     } else {
       setFormData((prevFormData: any) => ({
         ...prevFormData,
-        [id]: value,
+        [id]: formattedValue,
       }));
     }
   };
+  
 
   const handlePasswordInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -128,20 +209,33 @@ const CustomDropdown = () => {
   const handleEditData = async () => {
     const userId = localStorage.getItem('userId');
 
-  const isEmpty = Object.keys(formData).some(key => {
-    if (key.startsWith('user_address')) {
-      // Se o campo faz parte do endereço, verifique se algum campo dentro do endereço está vazio
-      return Object.values(formData[key]).some(value => value === '' || value === null);
-    } else {
-      // Caso contrário, verifique apenas o campo atual
-      return formData[key] === '' || formData[key] === null;
-    }
-  });
+    const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+    const cepRegex = /^\d{5}-\d{3}$/;
 
-  if (isEmpty) {
-    alert('Por favor, preencha todos os campos.');
-    return;
-  }
+    const isEmpty = Object.keys(formData).some(key => {
+      if (key.startsWith('user_address')) {
+        // Se o campo faz parte do endereço, verifique se algum campo dentro do endereço está vazio
+        return Object.values(formData[key]).some(value => value === '' || value === null);
+      } else {
+        // Caso contrário, verifique apenas o campo atual
+        return formData[key] === '' || formData[key] === null;
+      }
+    });
+
+    if (isEmpty) {
+      alert('Por favor, preencha todos os campos.');
+      return;
+    }
+
+    if (!cpfRegex.test(formData.user_cpf)) {
+      alert('Por favor, insira um CPF válido.');
+      return;
+    }
+
+    if (!cepRegex.test(formData.user_address?.cep)) {
+      alert('Por favor, insira um CEP válido.');
+      return;
+    }
 
     try {
       const response = await fetch(`http://localhost:3001/PutUser/EditUser/${userId}`, {
@@ -227,7 +321,7 @@ const CustomDropdown = () => {
                   <Form.Control
                     type="text"
                     placeholder="CPF"
-                    defaultValue={userData.user_cpf}
+                    value={formData.user_cpf}
                     onChange={handleInputChange}
                   />
                 </Form.Group>
@@ -243,7 +337,7 @@ const CustomDropdown = () => {
                   <Form.Control
                     type="text"
                     placeholder="Logradouro"
-                    defaultValue={userData.user_address?.logradouro}
+                    value={formData.user_address?.logradouro || logradouro}
                     onChange={handleInputChange}
                   />
                 </Form.Group>
@@ -262,7 +356,7 @@ const CustomDropdown = () => {
                   <Form.Control
                     type="text"
                     placeholder="Bairro"
-                    defaultValue={userData.user_address?.bairro}
+                    value={formData.user_address?.bairro || bairro}
                     onChange={handleInputChange}
                   />
                 </Form.Group>
@@ -270,7 +364,7 @@ const CustomDropdown = () => {
                   <Form.Control
                     type="text"
                     placeholder="CEP"
-                    defaultValue={userData.user_address?.cep}
+                    value={formData.user_address?.cep}
                     onChange={handleInputChange}
                   />
                 </Form.Group>
@@ -278,7 +372,7 @@ const CustomDropdown = () => {
                   <Form.Control
                     type="text"
                     placeholder="Cidade"
-                    defaultValue={userData.user_address?.cidade}
+                    value={formData.user_address?.cidade || cidade}
                     onChange={handleInputChange}
                   />
                 </Form.Group>
@@ -286,7 +380,7 @@ const CustomDropdown = () => {
                   <Form.Control
                     type="text"
                     placeholder="Estado"
-                    defaultValue={userData.user_address?.estado}
+                    value={formData.user_address?.estado || estado}
                     onChange={handleInputChange}
                   />
                 </Form.Group>
