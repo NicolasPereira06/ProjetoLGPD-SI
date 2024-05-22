@@ -2,12 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser'
 import SignUp from './Create/PostUser';
-import ReadUserID from './Read/GetUser';
+import {ReadUserID, ReadUsers } from './Read/GetUser';
 import EditUser from './Update/PutUser';
 import DeleteUser from './Delete/DeleteUser';
 import UpdatePassword from './Update/PutPasswordUser';
 import Login from './Auth/Login';
 import DB from './ConnectDB/db';
+import SignUpAdmin from './Create/PostAdmin';
 
 const app = express();
 const port = 3001;
@@ -43,9 +44,11 @@ app.use('/Auth', Login())
 
 // Create
 app.use('/PostUser', SignUp())
+app.use('/PostAdmin', SignUpAdmin())
 
 // Read
 app.use('/GetUser', ReadUserID())
+app.use('/GetUser', ReadUsers())
 
 // Update
 app.use('/PutUser', EditUser())

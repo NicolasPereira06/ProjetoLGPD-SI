@@ -4,7 +4,7 @@ import Login from "../pages/Login/Login";
 import SignUp from "../pages/SignUp/SignUp";
 import Terms from "../pages/SignUp/Terms";
 import UserScreen from "../pages/UserScreen/UserScreen"
-import { PrivateRouteUser } from "./RouteAuth";
+import { PrivateRouteAdmin, PrivateRouteUser } from "./RouteAuth";
 
 export const Rotas = () => {
     return (
@@ -21,6 +21,13 @@ export const Rotas = () => {
                         </PrivateRouteUser>
                     }     
                 />
+                {/* <Route 
+                    path="/adminscreen" 
+                    element={
+                        <PrivateRouteAdmin>
+                        </PrivateRouteAdmin>
+                    }     
+                /> */}
                 <Route path="/" element={<Navigate to={'/login'} />} />
                 <Route path="*" element={<Navigate to={'/login'} />}/>
             </Routes>

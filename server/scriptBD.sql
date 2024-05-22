@@ -10,3 +10,9 @@ CREATE TABLE Users(
     user_email VARCHAR(100) NOT NULL,
     user_password VARCHAR(100) NOT NULL
 );
+
+CREATE TABLE Admin(
+    admin_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
+    admin_email VARCHAR(100) NOT NULL,
+    admin_password VARCHAR(100) NOT NULL
+);
