@@ -20,9 +20,36 @@ function SignUp() {
         user_password: ""
     });
 
+    const [errors, setErrors] = useState({
+        user_cpf: "",
+        user_address_cep: "",
+        general: ""
+    });
+
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
-        if (id.startsWith("user_address")) {
+
+        if (id === "user_cpf") {
+            const formattedCPF = formatCPF(value);
+            setFormData(prevState => ({
+                ...prevState,
+                [id]: formattedCPF
+            }));
+            validateCPF(formattedCPF);
+        } else if (id === "user_address_cep") {
+            const formattedCEP = formatCEP(value);
+            setFormData(prevState => ({
+                ...prevState,
+                user_address: {
+                    ...prevState.user_address,
+                    cep: formattedCEP
+                }
+            }));
+            if (formattedCEP.length === 9) {
+                searchCEP(formattedCEP);
+            }
+            validateCEP(formattedCEP);
+        } else if (id.startsWith("user_address")) {
             const addressField = id.split("_")[2]; // Obtém o nome do campo de endereço
             setFormData(prevState => ({
                 ...prevState,
@@ -35,6 +62,82 @@ function SignUp() {
             setFormData(prevState => ({
                 ...prevState,
                 [id]: value
+            }));
+        }
+    };
+
+    const formatCPF = (cpf: string) => {
+        cpf = cpf.replace(/\D/g, "");
+        if (cpf.length <= 11) {
+            return cpf.replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        }
+        return cpf;
+    };
+
+    const validateCPF = (cpf: string) => {
+        const cpfRegex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/;
+        if (!cpfRegex.test(cpf)) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                user_cpf: "CPF inválido. Formato esperado: 000.000.000-00"
+            }));
+        } else {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                user_cpf: ""
+            }));
+        }
+    };
+
+    const formatCEP = (cep: string) => {
+        cep = cep.replace(/\D/g, "");
+        if (cep.length <= 8) {
+            return cep.replace(/(\d{5})(\d{1,3})$/, "$1-$2");
+        }
+        return cep;
+    };
+
+    const validateCEP = (cep: string) => {
+        const cepRegex = /^\d{5}\-\d{3}$/;
+        if (!cepRegex.test(cep)) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                user_address_cep: "CEP inválido. Formato esperado: 00000-000"
+            }));
+        } else {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                user_address_cep: ""
+            }));
+        }
+    };
+
+    const searchCEP = async (cep: string) => {
+        try {
+            const response = await fetch(`https://viacep.com.br/ws/${cep.replace('-', '')}/json/`);
+            const data = await response.json();
+            if (response.ok) {
+                setFormData(prevState => ({
+                    ...prevState,
+                    user_address: {
+                        ...prevState.user_address,
+                        logradouro: data.logradouro,
+                        bairro: data.bairro,
+                        cidade: data.localidade,
+                        estado: data.uf
+                    }
+                }));
+            } else {
+                setErrors(prevErrors => ({
+                    ...prevErrors,
+                    general: 'CEP não encontrado. Por favor, verifique o CEP digitado.'
+                }));
+            }
+        } catch (error) {
+            console.error('Erro ao buscar CEP:', error);
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                general: 'Erro ao buscar CEP. Por favor, tente novamente.'
             }));
         }
     };
@@ -56,10 +159,33 @@ function SignUp() {
             user_email: "",
             user_password: ""
         });
+        setErrors({
+            user_cpf: "",
+            user_address_cep: "",
+            general: ""
+        });
+    };
+
+    const validateForm = () => {
+        validateCPF(formData.user_cpf);
+        validateCEP(formData.user_address.cep);
+
+        return !errors.user_cpf && !errors.user_address_cep;
     };
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
+
+        setErrors({
+            user_cpf: "",
+            user_address_cep: "",
+            general: ""
+        });
+
+        if (!validateForm()) {
+            alert("Por favor, corrija os erros antes de enviar o formulário.");
+            return;
+        }
 
         try {
             const response = await fetch('http://localhost:3001/PostUser/SignUp', {
@@ -70,13 +196,20 @@ function SignUp() {
                 body: JSON.stringify(formData)
             });
 
-            if(response.ok) {
+            if (response.ok) {
                 const data = await response.json();
-                alert('Cadastro feito com sucesso')
-                clearFields()
+                alert('Cadastro feito com sucesso');
+                clearFields();
+            } else {
+                const errorData = await response.json();
+                if (errorData.error === 'CPF já cadastrado') {
+                    alert(errorData.error);
+                } else if (errorData.error === 'Email já cadastrado') {
+                    alert(errorData.error);
+                } else {
+                    alert('Erro ao cadastrar usuário');
+                }
             }
-
-
         } catch (error) {
             console.error('Erro ao cadastrar usuário:', error);
         }
@@ -125,10 +258,11 @@ function SignUp() {
                                 name="cpf"
                                 id="user_cpf"
                                 placeholder="CPF"
-                                value={formData.user_cpf}  
+                                value={formData.user_cpf}
                                 onChange={handleChange}
                                 required
                             />
+                            {errors.user_cpf && <span className="error">{errors.user_cpf}</span>}
                         </div>
 
                         <div className="inputContainer">
@@ -141,6 +275,20 @@ function SignUp() {
                                 onChange={handleChange}
                                 required
                             />
+                        </div>
+
+                        <div className="inputContainer">
+                            <label htmlFor="endereco"></label>
+                            <input
+                                type="text"
+                                name="user_address_cep"
+                                id="user_address_cep"
+                                placeholder="CEP"
+                                value={formData.user_address.cep}
+                                onChange={handleChange}
+                                required
+                            />
+                            {errors.user_address_cep && <span className="error">{errors.user_address_cep}</span>}
                         </div>
 
                         <div className="inputContainer">
@@ -186,23 +334,10 @@ function SignUp() {
                             <label htmlFor="endereco"></label>
                             <input
                                 type="text"
-                                name="user_address_cep"
-                                id="user_address_cep"
-                                placeholder="CEP"
-                                value={formData.user_address.cep}  
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-
-                        <div className="inputContainer">
-                            <label htmlFor="endereco"></label>
-                            <input
-                                type="text"
                                 name="user_address_cidade"
                                 id="user_address_cidade"
                                 placeholder="Cidade"
-                                value={formData.user_address.cidade}  
+                                value={formData.user_address.cidade}
                                 onChange={handleChange}
                                 required
                             />
@@ -215,7 +350,7 @@ function SignUp() {
                                 name="user_address_estado"
                                 id="user_address_estado"
                                 placeholder="Estado"
-                                value={formData.user_address.estado}  
+                                value={formData.user_address.estado}
                                 onChange={handleChange}
                                 required
                             />
@@ -224,52 +359,51 @@ function SignUp() {
                         <div className="inputContainer">
                             <label htmlFor="email"></label>
                             <input
-                                type="text"
+                                type="email"
                                 name="email"
                                 id="user_email"
                                 placeholder="Email"
-                                value={formData.user_email}  
+                                value={formData.user_email}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
 
                         <div className="inputContainer">
-                            <label htmlFor="password"></label>
+                            <label htmlFor="senha"></label>
                             <input
                                 type="password"
                                 name="senha"
                                 id="user_password"
                                 placeholder="Senha"
-                                value={formData.user_password}  
+                                value={formData.user_password}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
+
+                        <div className="divTerms">
+                            <input
+                                type="checkbox"
+                                name="termos"
+                                className="inputTerms"
+                                required
+                            />
+                            <span>
+                                Li e estou de acordo com o
+                                <a href="/terms" >Termo de Uso e Politica de Privacidade</a>
+                            </span>
+                        </div>
+
+                        <button className="button" type="submit">
+                            Cadastrar
+                        </button>
+
+                        <div className="footer">
+                            <span>Voltar para o </span>
+                            <a href="/login">Login</a>
+                        </div>
                     </div>
-                    <div className="divTerms">
-                        <input
-                            type="checkbox"
-                            name="termos"
-                            className="inputTerms"
-                            required
-                        />
-                        <span>
-                            Li e estou de acordo com o
-                            <a href="/terms" >Termo de Uso e Politica de Privacidade</a>
-                        </span>
-                    </div>
-
-                    <button className="button" type="submit">
-                        Cadastrar
-                    </button>
-
-                    <div className="footer">
-                        <span>Voltar para o </span>
-                        <a href="/login">Login</a>
-                    </div>
-
-
                 </form>
             </div>
         </div>

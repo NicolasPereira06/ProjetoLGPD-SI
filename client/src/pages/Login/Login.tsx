@@ -79,8 +79,6 @@ function Login() {
                         />
                     </div>
 
-                    <a className="esqueceusenha" href="/forgotPassword">Esqueceu a senha?</a>
-
                     <button className="button" type="submit">
                         Entrar
                     </button>

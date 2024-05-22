@@ -20,6 +20,17 @@ function SignUp(): express.Router {
         user_password
       } = req.body;
 
+      // Verifica se o CPF já está cadastrado
+      const cpfCheck = await DB.query('SELECT * FROM Users WHERE user_cpf = $1', [user_cpf]);
+      if (cpfCheck.rows.length > 0) {
+        return res.status(400).json({ error: 'CPF já cadastrado' });
+      }
+
+      const emailCheck = await DB.query('SELECT * FROM Users WHERE user_email = $1', [user_email]);
+      if (emailCheck.rows.length > 0) {
+        return res.status(401).json({error: 'Email já cadastrado'})
+      }
+
       const hashedPassword = await bcrypt.hash(user_password, 10);
 
       await DB.query(
