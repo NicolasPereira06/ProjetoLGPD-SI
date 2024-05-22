@@ -3,7 +3,8 @@ import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import Login from "../pages/Login/Login";
 import SignUp from "../pages/SignUp/SignUp";
 import Terms from "../pages/SignUp/Terms";
-import UserScreen from "../pages/UserScreen/UserScreen"
+import UserScreen from "../pages/UserScreen/UserScreen";
+import AdminScreen from "../pages/AdminScreen/AdminScreen";
 import { PrivateRouteUser } from "./RouteAuth";
 
 export const Rotas = () => {
@@ -13,16 +14,17 @@ export const Rotas = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/terms" element={<Terms />} />
-                <Route 
-                    path="/userscreen" 
+                <Route
+                    path="/userscreen"
                     element={
                         <PrivateRouteUser>
                             <UserScreen />
                         </PrivateRouteUser>
-                    }     
+                    }
                 />
+                <Route path="/adminscreen" element={<AdminScreen />} />
                 <Route path="/" element={<Navigate to={'/login'} />} />
-                <Route path="*" element={<Navigate to={'/login'} />}/>
+                <Route path="*" element={<Navigate to={'/login'} />} />
             </Routes>
         </BrowserRouter>
     );
