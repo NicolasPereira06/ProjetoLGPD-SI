@@ -74,3 +74,7 @@ td {
   height: 20px;
   color: #333;
 }
+
+.logout-item {
+  color: red; /* Define a cor do texto como vermelho */
+}

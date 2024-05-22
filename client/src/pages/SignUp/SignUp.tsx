@@ -23,6 +23,7 @@ function SignUp() {
     const [errors, setErrors] = useState({
         user_cpf: "",
         user_address_cep: "",
+        user_password: "",
         general: ""
     });
 
@@ -49,6 +50,12 @@ function SignUp() {
                 searchCEP(formattedCEP);
             }
             validateCEP(formattedCEP);
+        } else if (id === "user_password") {
+            setFormData(prevState => ({
+                ...prevState,
+                [id]: value
+            }));
+            validatePassword(value);
         } else if (id.startsWith("user_address")) {
             const addressField = id.split("_")[2]; // Obtém o nome do campo de endereço
             setFormData(prevState => ({
@@ -112,6 +119,33 @@ function SignUp() {
         }
     };
 
+    const validatePassword = (password: string) => {
+        const uppercaseRegex = /[A-Z]/;
+        const specialCharsRegex = /[!@#$%^&*(),.?":{}|<>]/;
+        
+        if (password.length < 6) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                user_password: "A senha deve ter pelo menos 6 caracteres"
+            }));
+        } else if (!uppercaseRegex.test(password)) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                user_password: "A senha deve conter pelo menos uma letra maiúscula"
+            }));
+        } else if (!specialCharsRegex.test(password)) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                user_password: "A senha deve conter pelo menos um caractere especial"
+            }));
+        } else {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                user_password: ""
+            }));
+        }
+    };
+
     const searchCEP = async (cep: string) => {
         try {
             const response = await fetch(`https://viacep.com.br/ws/${cep.replace('-', '')}/json/`);
@@ -162,6 +196,7 @@ function SignUp() {
         setErrors({
             user_cpf: "",
             user_address_cep: "",
+            user_password: "",
             general: ""
         });
     };
@@ -169,18 +204,13 @@ function SignUp() {
     const validateForm = () => {
         validateCPF(formData.user_cpf);
         validateCEP(formData.user_address.cep);
+        validatePassword(formData.user_password);
 
-        return !errors.user_cpf && !errors.user_address_cep;
+        return !errors.user_cpf && !errors.user_address_cep && !errors.user_password && !errors.general;
     };
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
-
-        setErrors({
-            user_cpf: "",
-            user_address_cep: "",
-            general: ""
-        });
 
         if (!validateForm()) {
             alert("Por favor, corrija os erros antes de enviar o formulário.");
@@ -232,7 +262,7 @@ function SignUp() {
                                 name="primeiroNome"
                                 id="user_first_name"
                                 placeholder="Primeiro Nome"
-                                value={formData.user_first_name}  
+                                value={formData.user_first_name}
                                 onChange={handleChange}
                                 required
                             />
@@ -245,7 +275,7 @@ function SignUp() {
                                 name="ultimoNome"
                                 id="user_last_name"
                                 placeholder="Último Nome"
-                                value={formData.user_last_name}  
+                                value={formData.user_last_name}
                                 onChange={handleChange}
                                 required
                             />
@@ -271,14 +301,15 @@ function SignUp() {
                                 type="date"
                                 name="dataNasc"
                                 id="user_date_birth"
-                                value={formData.user_date_birth}  
+                                placeholder="Data de Nascimento"
+                                value={formData.user_date_birth}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
-
+                        
                         <div className="inputContainer">
-                            <label htmlFor="endereco"></label>
+                            <label htmlFor="cep"></label>
                             <input
                                 type="text"
                                 name="user_address_cep"
@@ -295,43 +326,43 @@ function SignUp() {
                             <label htmlFor="endereco"></label>
                             <input
                                 type="text"
-                                name="endereco"
+                                name="user_address_logradouro"
                                 id="user_address_logradouro"
                                 placeholder="Logradouro"
-                                value={formData.user_address.logradouro}  
+                                value={formData.user_address.logradouro}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
 
                         <div className="inputContainer">
-                            <label htmlFor="endereco"></label>
+                            <label htmlFor="numero"></label>
                             <input
                                 type="text"
-                                name="endereco"
+                                name="user_address_numero"
                                 id="user_address_numero"
-                                placeholder="Número do Logradouro"
-                                value={formData.user_address.numero}  
+                                placeholder="Número"
+                                value={formData.user_address.numero}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
 
                         <div className="inputContainer">
-                            <label htmlFor="endereco"></label>
+                            <label htmlFor="bairro"></label>
                             <input
                                 type="text"
                                 name="user_address_bairro"
                                 id="user_address_bairro"
                                 placeholder="Bairro"
-                                value={formData.user_address.bairro}  
+                                value={formData.user_address.bairro}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
 
                         <div className="inputContainer">
-                            <label htmlFor="endereco"></label>
+                            <label htmlFor="cidade"></label>
                             <input
                                 type="text"
                                 name="user_address_cidade"
@@ -344,7 +375,7 @@ function SignUp() {
                         </div>
 
                         <div className="inputContainer">
-                            <label htmlFor="endereco"></label>
+                            <label htmlFor="estado"></label>
                             <input
                                 type="text"
                                 name="user_address_estado"
@@ -380,6 +411,7 @@ function SignUp() {
                                 onChange={handleChange}
                                 required
                             />
+                            {errors.user_password && <span className="error">{errors.user_password}</span>}
                         </div>
 
                         <div className="divTerms">
@@ -395,9 +427,7 @@ function SignUp() {
                             </span>
                         </div>
 
-                        <button className="button" type="submit">
-                            Cadastrar
-                        </button>
+                        <button type="submit">Cadastrar</button>
 
                         <div className="footer">
                             <span>Voltar para o </span>

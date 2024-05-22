@@ -7,6 +7,7 @@ const CustomDropdown = () => {
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [showEditDataModal, setShowEditDataModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showSairModal, setShowSairModal] = useState(false);
   const [userData, setUserData] = useState<any>({});
   const [formData, setFormData] = useState<any>({});
   const [passwordData, setPasswordData] = useState({
@@ -39,6 +40,12 @@ const CustomDropdown = () => {
     setShowChangePasswordModal(false);
     setShowEditDataModal(false);
     setShowDeleteModal(false);
+    setShowSairModal(false);
+  };
+
+  const handleLogout = async () => {
+    localStorage.clear();
+    navigate('/login');
   };
 
   const handleShowChangePasswordModal = () => setShowChangePasswordModal(true);
@@ -47,8 +54,17 @@ const CustomDropdown = () => {
 
   const handleShowDeleteModal = () => setShowDeleteModal(true);
 
+  const handleShowSairModal = () => setShowSairModal(true);
+
   const handlePasswordChange = async () => {
     const userId = localStorage.getItem('userId');
+
+    const isEmpty = Object.values(passwordData).some(value => value === '' || value === null);
+    if (isEmpty) {
+      alert('Por favor, preencha todos os campos.');
+      return;
+    }
+
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       alert('As senhas não coincidem');
       return;
@@ -111,6 +127,22 @@ const CustomDropdown = () => {
 
   const handleEditData = async () => {
     const userId = localStorage.getItem('userId');
+
+  const isEmpty = Object.keys(formData).some(key => {
+    if (key.startsWith('user_address')) {
+      // Se o campo faz parte do endereço, verifique se algum campo dentro do endereço está vazio
+      return Object.values(formData[key]).some(value => value === '' || value === null);
+    } else {
+      // Caso contrário, verifique apenas o campo atual
+      return formData[key] === '' || formData[key] === null;
+    }
+  });
+
+  if (isEmpty) {
+    alert('Por favor, preencha todos os campos.');
+    return;
+  }
+
     try {
       const response = await fetch(`http://localhost:3001/PutUser/EditUser/${userId}`, {
         method: 'PUT',
@@ -153,6 +185,7 @@ const CustomDropdown = () => {
       console.error('Erro ao excluir usuário:', error);
     }
   };
+  
 
 
   return (
@@ -161,6 +194,7 @@ const CustomDropdown = () => {
         <Dropdown.Item onClick={handleShowEditDataModal}>Editar dados</Dropdown.Item>
         <Dropdown.Item onClick={handleShowChangePasswordModal}>Mudar senha</Dropdown.Item>
         <Dropdown.Item onClick={handleShowDeleteModal}>Excluir dados</Dropdown.Item>
+        <Dropdown.Item className="logout-item" onClick={handleShowSairModal}>Sair</Dropdown.Item>
       </DropdownButton>
 
       {/* Modal para editar dados */}
@@ -308,6 +342,21 @@ const CustomDropdown = () => {
             Não
           </Button>
           <Button variant="primary" onClick={handleDelete}>
+            Sim
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal para sair */}
+      <Modal show={showSairModal} onHide={handleClose} dialogClassName="custom-modal" centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Deseja sair do sistema?</Modal.Title>
+        </Modal.Header>
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="secondary" onClick={handleClose}>
+            Não
+          </Button>
+          <Button variant="primary" onClick={handleLogout}>
             Sim
           </Button>
         </Modal.Footer>
