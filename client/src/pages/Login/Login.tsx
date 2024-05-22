@@ -34,7 +34,11 @@ function Login() {
                 const data = await response.json();
                 localStorage.setItem('userId', data.userId);
                 localStorage.setItem('userType', data.userType);
-                navigate('/userscreen')
+                if (data.userType === 'admin') {
+                    navigate('/adminscreen')
+                } else {
+                    navigate('/userscreen')
+                }
             } else {
                 const errorData = await response.json();
                 alert(`Erro ao fazer login:${errorData.message}`);
