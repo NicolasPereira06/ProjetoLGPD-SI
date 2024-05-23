@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../AdminScreen/adminscreen.css';
 import { useNavigate } from "react-router-dom";
@@ -27,10 +27,14 @@ const AdminScreen: React.FC = () => {
   }, []);
 
   const handleSair = () => {
-    localStorage.clear()
-    navigate('/login')
-  }
+    localStorage.clear();
+    navigate('/login');
+  };
 
+  const handleBackup = () => {
+    console.log('Realizar Backup');
+    // Aqui você pode adicionar a lógica para realizar o backup
+  };
 
   return (
     <div className="container">
@@ -38,8 +42,15 @@ const AdminScreen: React.FC = () => {
         <div className="admin-screen">
           <div className="title-edit-container">
             <h1 className="title">Usuários</h1>
-            <Button variant="primary">Realizar Backup</Button>
-            <Button variant="danger" onClick={handleSair}>Sair</Button>
+            <Dropdown>
+              <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                Opções
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={handleBackup}>Realizar Backup</Dropdown.Item>
+                <Dropdown.Item className="logout-item" onClick={handleSair}>Sair</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
           <div className="table-container">
             <table className="wide-table">
