@@ -1,8 +1,16 @@
-import { useState, ChangeEvent, FormEvent, FormEventHandler } from "react";
+import { useState, ChangeEvent, FormEvent, FormEventHandler, useEffect } from "react";
 import logo from "../../logo.svg";
 import "./styles.css";
 
+type Term = {
+    terms_id: string,
+    terms_title: string;
+    terms_content: string;
+    terms_mandatory: boolean;
+}
+
 function SignUp() {
+    const [terms, setTerms] = useState<Term[]>([]);
     const [formData, setFormData] = useState({
         user_first_name: "",
         user_last_name: "",
@@ -231,6 +239,7 @@ function SignUp() {
             if (response.ok) {
                 const data = await response.json();
                 alert('Cadastro feito com sucesso');
+                registerUserTerms();
                 clearFields();
             } else {
                 const errorData = await response.json();
@@ -246,6 +255,29 @@ function SignUp() {
             console.error('Erro ao cadastrar usuário:', error);
         }
     };
+
+    const fetchTerms = async () => {
+        try {
+            const response = await fetch(`http://localhost:3001/Terms/GetTerms`, {
+                method: 'GET'
+            });
+            if (!response.ok) {
+                throw new Error('Erro ao carregar os termos');
+            }
+            const data = await response.json();
+            setTerms(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchTerms();
+    }, [navigator]);
+
+    const registerUserTerms = async () => {
+
+    }
 
     return (
         <div className="container">
@@ -429,40 +461,20 @@ function SignUp() {
                             {errors.user_password && <span className="error">{errors.user_password}</span>}
                         </div>
 
-                        <div className="divTerms">
-                            <input
-                                type="checkbox"
-                                name="termos"
-                                className="inputTerms"
-                                required
-                            />
-                            <span>
-                                Li e estou de acordo com o
-                                <a href="/terms" >Termo de Uso.</a>
-                            </span>
-                        </div>
-                        <div className="divTerms">
-                            <input
-                                type="checkbox"
-                                name="termos"
-                                className="inputTerms"
-                            />
-                            <span>
-                                Desejo receber notificações adicionais
-                                por E-mail.
-                            </span>
-                        </div>
-                        <div className="divTerms">
-                            <input
-                                type="checkbox"
-                                name="termos"
-                                className="inputTerms"
-                            />
-                            <span>
-                                Desejo receber notificações adicionais
-                                por SMS.
-                            </span>
-                        </div>
+                        <ul className="divTerms">
+                            {terms.map((term) => (
+                                <li className="termField">
+                                    <input
+                                        type="checkbox"
+                                        name="termos"
+                                        className="inputTerms"
+                                        required={term.terms_mandatory}
+                                    />
+                                    <span>{term.terms_title} <a href="/terms">Saiba mais</a></span>
+                                </li>
+                            ))}
+                        </ul>
+                        
                     </div>
                         <button type="submit">Cadastrar</button>
 
