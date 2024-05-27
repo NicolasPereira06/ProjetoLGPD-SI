@@ -9,6 +9,8 @@ import UpdatePassword from './Update/PutPasswordUser';
 import Login from './Auth/Login';
 import DB from './ConnectDB/db';
 import SignUpAdmin from './Create/PostAdmin';
+import Backup from './Backup&Restore/backup';
+import Restore from './Backup&Restore/restore';
 
 const app = express();
 const port = 3001;
@@ -30,7 +32,10 @@ DB.connect(err => {
   console.log('Conectado ao banco de dados PostgreSQL.');
 });
 
+// Backup & Restore
 
+app.use(Backup())
+app.use(Restore())
 // Authentication
 
 //Login

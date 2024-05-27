@@ -26,6 +26,9 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
+    "child_process": "^1.0.2",
+    "install": "^0.13.0",
+    "npm": "^10.8.0",
     "pg": "^8.11.5"
   }
 }
