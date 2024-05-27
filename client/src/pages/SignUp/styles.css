@@ -12,7 +12,8 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    overflow: hidden; /* adicionado */
+    overflow: hidden;
+    /* adicionado */
 }
 
 .main {
@@ -24,7 +25,8 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    overflow: hidden; /* adicionado */
+    overflow: hidden;
+    /* adicionado */
 }
 
 .header {
@@ -43,9 +45,12 @@
     font-size: larger;
 }
 
-.formContainer { /* adicionado */
-    max-height: calc(45vh - 80px); /* ajuste conforme necessário */
-    overflow-y: auto; /* adicionado */
+.formContainer {
+    /* adicionado */
+    max-height: calc(45vh - 80px);
+    /* ajuste conforme necessário */
+    overflow-y: auto;
+    /* adicionado */
 }
 
 .container form {
@@ -75,9 +80,12 @@
 }
 
 .divTerms {
-    display: flex;
-    width: 60%;
     margin-top: 20px;
+}
+
+.termField {
+    display: flex;
+    
 }
 
 .inputTerms {
@@ -95,7 +103,8 @@
 
 .divTerms span a {
     display: inline;
-    font-size: 13px;
+    font-size: 10px;
+    color: blue;
 }
 
 .container form button {
