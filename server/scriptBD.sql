@@ -21,7 +21,8 @@ CREATE TABLE Admin(
 CREATE TABLE Terms (
     terms_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     terms_title VARCHAR(255),
-    terms_content VARCHAR(10000)
+    terms_content VARCHAR(10000),
+    terms_mandatory BOOLEAN NOT NULL
 );
 
 CREATE TABLE UserTerms (
