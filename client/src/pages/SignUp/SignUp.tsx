@@ -1,17 +1,8 @@
-import { useState, useEffect, ChangeEvent, FormEvent, FormEventHandler } from "react";
+import { useState, ChangeEvent, FormEvent, FormEventHandler } from "react";
 import logo from "../../logo.svg";
 import "./styles.css";
 
-type Term = {
-    terms_id: string,
-    terms_title: string;
-    terms_content: string;
-    terms_mandatory: boolean;
-}
-
 function SignUp() {
-    const [terms, setTerms] = useState<Term[]>([]);
-
     const [formData, setFormData] = useState({
         user_first_name: "",
         user_last_name: "",
@@ -132,7 +123,7 @@ function SignUp() {
     const validatePassword = (password: string) => {
         const uppercaseRegex = /[A-Z]/;
         const specialCharsRegex = /[!@#$%^&*(),.?":{}|<>]/;
-
+        
         if (password.length < 6) {
             setErrors(prevErrors => ({
                 ...prevErrors,
@@ -237,12 +228,9 @@ function SignUp() {
                 body: JSON.stringify(formData)
             });
 
-            console.log(formData)
-
             if (response.ok) {
                 const data = await response.json();
                 alert('Cadastro feito com sucesso');
-                registerUserTerms();
                 clearFields();
             } else {
                 const errorData = await response.json();
@@ -258,29 +246,6 @@ function SignUp() {
             console.error('Erro ao cadastrar usuário:', error);
         }
     };
-
-    const fetchTerms = async () => {
-        try {
-            const response = await fetch(`http://localhost:3001/Terms/GetTerms`, {
-                method: 'GET'
-            });
-            if (!response.ok) {
-                throw new Error('Erro ao carregar os termos');
-            }
-            const data = await response.json();
-            setTerms(data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    useEffect(() => {
-        fetchTerms();
-    }, [navigator]);
-
-    const registerUserTerms = async () => {
-
-    }
 
     return (
         <div className="container">
@@ -340,6 +305,19 @@ function SignUp() {
                                 id="user_date_birth"
                                 placeholder="Data de Nascimento"
                                 value={formData.user_date_birth}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="inputContainer">
+                            <label htmlFor="telefone"></label>
+                            <input
+                                type="text"
+                                name="user_cellphone"
+                                id="user_cellphone"
+                                placeholder="Telefone"
+                                value={formData.user_cellphone}
                                 onChange={handleChange}
                                 required
                             />
@@ -460,17 +438,39 @@ function SignUp() {
                             />
                             <span>
                                 Li e estou de acordo com o
-                                <a href="/terms" >Termo de Uso e Politica de Privacidade</a>
+                                <a href="/terms" >Termo de Uso.</a>
+                            </span>
+                        </div>
+                        <div className="divTerms">
+                            <input
+                                type="checkbox"
+                                name="termos"
+                                className="inputTerms"
+                            />
+                            <span>
+                                Desejo receber notificações adicionais
+                                por E-mail.
+                            </span>
+                        </div>
+                        <div className="divTerms">
+                            <input
+                                type="checkbox"
+                                name="termos"
+                                className="inputTerms"
+                            />
+                            <span>
+                                Desejo receber notificações adicionais
+                                por SMS.
                             </span>
                         </div>
 
-                    <button type="submit">Cadastrar</button>
+                        <button type="submit">Cadastrar</button>
 
-                    <div className="footer">
-                        <span>Voltar para o </span>
-                        <a href="/login">Login</a>
+                        <div className="footer">
+                            <span>Voltar para o </span>
+                            <a href="/login">Login</a>
+                        </div>
                     </div>
-
                 </form>
             </div>
         </div>

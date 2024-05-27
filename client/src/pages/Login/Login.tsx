@@ -41,7 +41,7 @@ function Login() {
                 }
             } else {
                 const errorData = await response.json();
-                alert(`Erro ao fazer login:${errorData.message}`);
+                alert(`${errorData.message}`);
             }
         } catch (error) {
             console.error('Erro ao fazer login:', error);
