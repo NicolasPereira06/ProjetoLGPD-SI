@@ -11,6 +11,8 @@ import DB from './ConnectDB/db';
 import SignUpAdmin from './Create/PostAdmin';
 import Backup from './Backup&Restore/backup';
 import Restore from './Backup&Restore/restore';
+import GetTerms from './Read/GetTerms';
+import GetUserTerms from './Read/GetUserTerms';
 
 const app = express();
 const port = 3001;
@@ -61,3 +63,18 @@ app.use('/PutPasswordUser', UpdatePassword())
 
 // Delete
 app.use('/DeleteUser', DeleteUser())
+
+// -------------------------------------------------
+// CRUD - Terms
+
+// Read
+app.use('/Terms', GetTerms())
+
+// -------------------------------------------------
+// CRUD - UserTerms
+
+// // Create
+// app.use('/UserTerms', PostUserTerms())
+
+// Read
+app.use('/UserTerms', GetUserTerms())
