@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser'
 import SignUp from './Create/PostUser';
-import {ReadUserID, ReadUsers } from './Read/GetUser';
+import { ReadUserID, ReadUsers } from './Read/GetUser';
 import EditUser from './Update/PutUser';
 import DeleteUser from './Delete/DeleteUser';
 import UpdatePassword from './Update/PutPasswordUser';
@@ -14,6 +14,8 @@ import Restore from './Backup&Restore/restore';
 import GetTerms from './Read/GetTerms';
 import GetUserTerms from './Read/GetUserTerms';
 import AddTerm from './Create/PostTerm';
+import PutTerms from './Update/PutTerms';
+import DeleteTerms from './Delete/DeleteTerms';
 
 const app = express();
 const port = 3001;
@@ -69,15 +71,25 @@ app.use('/DeleteUser', DeleteUser())
 // -------------------------------------------------
 // CRUD - Terms
 
+
+
+// Update
+app.use('/Terms', PutTerms())
+
 // Read
 app.use('/Terms', GetTerms())
+
+// Create
 app.use('/Terms', AddTerm())
 
 // -------------------------------------------------
 // CRUD - UserTerms
-
+app
 // // Create
 // app.use('/UserTerms', PostUserTerms())
 
 // Read
 app.use('/UserTerms', GetUserTerms())
+
+// Delete
+app.use('/DeleteTerms', DeleteTerms())
