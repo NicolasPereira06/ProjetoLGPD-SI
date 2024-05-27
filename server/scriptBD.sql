@@ -31,7 +31,7 @@ CREATE TABLE UserTerms (
     terms_id UUID NOT NULL,
     accepted BOOLEAN NOT NULL,
     accepted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (terms_id) REFERENCES Terms(terms_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (terms_id) REFERENCES Terms(terms_id),
     UNIQUE (user_id, terms_id)
 );
