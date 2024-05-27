@@ -52,6 +52,10 @@ const UserScreen: React.FC = () => {
                   <td>{userData.user_date_birth}</td>
                 </tr>
                 <tr>
+                  <th>Telefone</th>
+                  <td>{userData.user_cellphone}</td>
+                </tr>
+                <tr>
                   <th>Email</th>
                   <td>{userData.user_email}</td>
                 </tr>

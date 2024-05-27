@@ -9,7 +9,7 @@ function Backup(): express.Router {
 
         // Configurações de acesso ao banco de dados ElephantSQL
         const dbConfig = {
-        host: 'postgres://sfnrsfac:HEN6Pe--qX857xZ5CR6j3Bqp7JLxFmsE@isabelle.db.elephantsql.com/sfnrsfac',
+        host: 'isabelle.db.elephantsql.com',
         port: 5432,
         user: 'sfnrsfac',
         password: 'HEN6Pe--qX857xZ5CR6j3Bqp7JLxFmsE',

@@ -325,6 +325,14 @@ const CustomDropdown = () => {
                     onChange={handleInputChange}
                   />
                 </Form.Group>
+                <Form.Group controlId="user_cellphone" className="form-group-with-margin">
+                  <Form.Control
+                    type="text"
+                    placeholder="Telefone"
+                    value={formData.user_cellphone}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
                 <Form.Group controlId="user_email" className="form-group-with-margin">
                   <Form.Control
                     type="email"

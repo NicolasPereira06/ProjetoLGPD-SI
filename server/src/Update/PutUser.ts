@@ -11,6 +11,7 @@ function EditUser(): express.Router {
                 user_first_name,
                 user_last_name,
                 user_cpf,
+                user_cellphone,
                 user_email,
                 user_address
             } = req.body;
@@ -19,6 +20,7 @@ function EditUser(): express.Router {
             if (user_first_name !== undefined) updatedFields.user_first_name = user_first_name;
             if (user_last_name !== undefined) updatedFields.user_last_name = user_last_name;
             if (user_cpf !== undefined) updatedFields.user_cpf = user_cpf;
+            if (user_cellphone !== undefined) updatedFields.user_cellphone = user_cellphone;
             if (user_email !== undefined) updatedFields.user_email = user_email;
             if (user_address !== undefined) updatedFields.user_address = user_address;
 

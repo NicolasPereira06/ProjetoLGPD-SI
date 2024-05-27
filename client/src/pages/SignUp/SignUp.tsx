@@ -8,6 +8,7 @@ function SignUp() {
         user_last_name: "",
         user_cpf: "",
         user_date_birth: "",
+        user_cellphone: "",
         user_address: {
             logradouro: "",
             numero: "",
@@ -182,6 +183,7 @@ function SignUp() {
             user_last_name: "",
             user_cpf: "",
             user_date_birth: "",
+            user_cellphone: "",
             user_address: {
                 logradouro: "",
                 numero: "",
@@ -225,6 +227,8 @@ function SignUp() {
                 },
                 body: JSON.stringify(formData)
             });
+
+            console.log(formData)
 
             if (response.ok) {
                 const data = await response.json();
@@ -303,6 +307,19 @@ function SignUp() {
                                 id="user_date_birth"
                                 placeholder="Data de Nascimento"
                                 value={formData.user_date_birth}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="inputContainer">
+                            <label htmlFor="cellphone"></label>
+                            <input
+                                type="text"
+                                name="user_cellphone"
+                                id="user_cellphone"
+                                placeholder="Telefone"
+                                value={formData.user_cellphone}
                                 onChange={handleChange}
                                 required
                             />
@@ -422,8 +439,30 @@ function SignUp() {
                                 required
                             />
                             <span>
-                                Li e estou de acordo com o
-                                <a href="/terms" >Termo de Uso e Politica de Privacidade</a>
+                                Li e estou de acordo com o <br />
+                                <a href="/terms" >Termo de Uso.</a>
+                            </span>
+                        </div>
+                        <div className="divTerms">
+                            <input
+                                type="checkbox"
+                                name="termos"
+                                className="inputTerms"
+                            />
+                            <span>
+                                Desejo receber notificações adicionais <br />
+                                por E-mail.
+                            </span>
+                        </div>
+                        <div className="divTerms">
+                            <input
+                                type="checkbox"
+                                name="termos"
+                                className="inputTerms"
+                            />
+                            <span>
+                                Desejo receber notificações adicionais <br />
+                                por SMS.
                             </span>
                         </div>
 
