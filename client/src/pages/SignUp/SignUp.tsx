@@ -463,14 +463,14 @@ function SignUp() {
                                 por SMS.
                             </span>
                         </div>
-
+                    </div>
                         <button type="submit">Cadastrar</button>
 
                         <div className="footer">
                             <span>Voltar para o </span>
                             <a href="/login">Login</a>
                         </div>
-                    </div>
+                    
                 </form>
             </div>
         </div>
