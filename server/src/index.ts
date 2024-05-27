@@ -13,6 +13,7 @@ import Backup from './Backup&Restore/backup';
 import Restore from './Backup&Restore/restore';
 import GetTerms from './Read/GetTerms';
 import GetUserTerms from './Read/GetUserTerms';
+import AddTerm from './Create/PostTerm';
 
 const app = express();
 const port = 3001;
@@ -38,6 +39,7 @@ DB.connect(err => {
 
 app.use(Backup())
 app.use(Restore())
+
 // Authentication
 
 //Login
@@ -69,6 +71,7 @@ app.use('/DeleteUser', DeleteUser())
 
 // Read
 app.use('/Terms', GetTerms())
+app.use('/Terms', AddTerm())
 
 // -------------------------------------------------
 // CRUD - UserTerms

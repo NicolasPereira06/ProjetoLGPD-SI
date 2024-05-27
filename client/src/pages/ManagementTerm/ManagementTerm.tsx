@@ -8,13 +8,13 @@ type Term = {
     terms_id: string;
     terms_title: string;
     terms_content: string;
-    terms_mandatory: boolean;
 }
 
 const ManagementTerm: React.FC = () => {
     const [terms, setTerms] = useState<Term[]>([]);
     const [showModal, setShowModal] = useState(false);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [termTitle, setTermTitle] = useState('');
+    const [termBody, setTermBody] = useState('');
     const [isUpdate, setIsUpdate] = useState(false);
     const [currentTerm, setCurrentTerm] = useState<Term | null>(null);
 
@@ -59,40 +59,50 @@ const ManagementTerm: React.FC = () => {
         setShowModal(true);
     };
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-            setSelectedFile(event.target.files[0]);
-        }
-    };
-
     const handleUpload = async () => {
-        if (selectedFile) {
-            const formData = new FormData();
-            formData.append('file', selectedFile);
-
-            const url = isUpdate && currentTerm ? `http://localhost:3001/Terms/UpdateTerm/${currentTerm.terms_id}` : `http://localhost:3001/Terms/AddTerm`;
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (!response.ok) {
-                    throw new Error('Erro ao fazer o upload do termo');
-                }
-
-                // Fechar o modal e atualizar a lista de termos
-                setShowModal(false);
-                fetchTerms();
-            } catch (error) {
-                console.error(error);
+        if (!termTitle || !termBody) {
+            alert('Por favor, preencha todos os campos.');
+            return;
+        }
+    
+        try {
+            const response = await fetch('http://localhost:3001/Terms/AddTerm', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ terms_title: termTitle, terms_content: termBody })
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message); // Use a propriedade correta do objeto de erro retornado pelo backend
             }
+    
+            setShowModal(false);
+            fetchTerms(); // Atualiza a lista de termos
+        } catch (error: any) {
+            console.error(error);
+            alert('Erro ao adicionar/atualizar termo: ' + error.message);
         }
     };
 
-    const handleDeleteTerm = (termId: string) => {
-        // Função para deletar o termo
+    const handleDeleteTerm = async (termId: string) => {
+        try {
+            const response = await fetch(`http://localhost:3001/Terms/DeleteTerm/${termId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                
+                throw new Error('Erro ao excluir termo');
+            }
+
+            fetchTerms(); // Atualiza a lista de termos após a exclusão
+        } catch (error) {
+            console.error(error);
+            alert('Erro ao excluir termo');
+        }
     };
 
     return (
@@ -115,7 +125,7 @@ const ManagementTerm: React.FC = () => {
                     <div className="table-container">
                         <table className="wide-table">
                             <tbody>
-                                {terms && terms.map((term, index) => (
+                                {terms && terms.map && terms.map((term, index) => (
                                     <tr key={index}>
                                         <th>{term.terms_title}</th>
                                         <td>
@@ -136,17 +146,20 @@ const ManagementTerm: React.FC = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Modal para upload do termo */}
+            {/* Modal para adicionar/atualizar termo */}
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>{isUpdate ? 'Atualizar Termo' : 'Adicionar Termo'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group controlId="formFile">
-                            <Form.Label>Selecione um arquivo PDF</Form.Label>
-                            <Form.Control type="file" accept="application/pdf" onChange={handleFileChange} />
+                        <Form.Group controlId="formTermTitle">
+                            <Form.Label>Título do Termo de Uso</Form.Label>
+                            <Form.Control type="text" value={termTitle} onChange={(e) => setTermTitle(e.target.value)} />
+                        </Form.Group>
+                        <Form.Group controlId="formTermBody">
+                            <Form.Label>Corpo do Termo de Uso</Form.Label>
+                            <Form.Control as="textarea" rows={5} value={termBody} onChange={(e) => setTermBody(e.target.value)} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -155,7 +168,7 @@ const ManagementTerm: React.FC = () => {
                         Cancelar
                     </Button>
                     <Button variant="primary" onClick={handleUpload}>
-                        Upload
+                        {isUpdate ? 'Atualizar' : 'Adicionar'}
                     </Button>
                 </Modal.Footer>
             </Modal>

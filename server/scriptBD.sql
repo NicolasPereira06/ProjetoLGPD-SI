@@ -21,8 +21,7 @@ CREATE TABLE Admin(
 CREATE TABLE Terms (
     terms_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     terms_title VARCHAR(255),
-    terms_content TEXT NOT NULL,
-    terms_mandatory BOOLEAN NOT NULL
+    terms_content VARCHAR(10000)
 );
 
 CREATE TABLE UserTerms (
@@ -31,7 +30,7 @@ CREATE TABLE UserTerms (
     terms_id UUID NOT NULL,
     accepted BOOLEAN NOT NULL,
     accepted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (terms_id) REFERENCES Terms(terms_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (terms_id) REFERENCES Terms(terms_id) ON DELETE CASCADE,
     UNIQUE (user_id, terms_id)
 );
