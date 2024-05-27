@@ -36,6 +36,10 @@ const AdminScreen: React.FC = () => {
     // Aqui você pode adicionar a lógica para realizar o backup
   };
 
+  const handleManagementTerm = () => {
+    navigate('/managementterm')
+  }
+
   return (
     <div className="container">
       <div className="main">
@@ -48,6 +52,7 @@ const AdminScreen: React.FC = () => {
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={handleBackup}>Realizar Backup</Dropdown.Item>
+                <Dropdown.Item onClick={handleManagementTerm}>Gerenciar Termos</Dropdown.Item>
                 <Dropdown.Item className="logout-item" onClick={handleSair}>Sair</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

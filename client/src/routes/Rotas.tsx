@@ -6,6 +6,7 @@ import Terms from "../pages/SignUp/Terms";
 import UserScreen from "../pages/UserScreen/UserScreen"
 import { PrivateRouteAdmin, PrivateRouteUser } from "./RouteAuth";
 import AdminScreen from "../pages/AdminScreen/AdminScreen";
+import ManagementTerm from "../pages/ManagementTerm/ManagementTerm";
 
 export const Rotas = () => {
     return (
@@ -27,6 +28,14 @@ export const Rotas = () => {
                     element={
                         <PrivateRouteAdmin>
                             <AdminScreen />
+                        </PrivateRouteAdmin>
+                    }     
+                />
+                                <Route 
+                    path="/managementterm" 
+                    element={
+                        <PrivateRouteAdmin>
+                            <ManagementTerm />
                         </PrivateRouteAdmin>
                     }     
                 />
