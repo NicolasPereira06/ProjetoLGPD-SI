@@ -11,6 +11,8 @@ type Term = {
 
 function SignUp() {
     const [terms, setTerms] = useState<Term[]>([]);
+    const [userId, setUserId] = useState<string | null>(null);
+    const [checkedTerms, setCheckedTerms] = useState<{ [key: string]: boolean }>({});
     const [formData, setFormData] = useState({
         user_first_name: "",
         user_last_name: "",
@@ -131,7 +133,7 @@ function SignUp() {
     const validatePassword = (password: string) => {
         const uppercaseRegex = /[A-Z]/;
         const specialCharsRegex = /[!@#$%^&*(),.?":{}|<>]/;
-        
+
         if (password.length < 6) {
             setErrors(prevErrors => ({
                 ...prevErrors,
@@ -238,8 +240,8 @@ function SignUp() {
 
             if (response.ok) {
                 const data = await response.json();
+                registerUserTerms(checkedTerms, data.user_id);
                 alert('Cadastro feito com sucesso');
-                registerUserTerms();
                 clearFields();
             } else {
                 const errorData = await response.json();
@@ -253,6 +255,33 @@ function SignUp() {
             }
         } catch (error) {
             console.error('Erro ao cadastrar usuário:', error);
+        }
+    };
+
+    const registerUserTerms = async (checkedTerms: Record<string, boolean>, user_id: string) => {
+        const formData = Object.entries(checkedTerms).map(([terms_id, accepted]) => ({
+            user_id,
+            terms_id,
+            accepted
+        }));
+        try {
+            const response = await fetch('http://localhost:3001/UserTerms/PostUserTerms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                alert('Vinculado com sucesso');
+            } else {
+                const errorData = await response.json();
+            alert('Erro ao vincular termo: ' + errorData.error);
+            }
+        } catch (error) {
+            console.error('Erro ao vincular termo:', error);
+        alert('Erro ao vincular termo');
         }
     };
 
@@ -275,9 +304,13 @@ function SignUp() {
         fetchTerms();
     }, [navigator]);
 
-    const registerUserTerms = async () => {
-
-    }
+    const handleCheckboxChange = (id: string) => {
+        setCheckedTerms((prevCheckedTerms) => ({
+            ...prevCheckedTerms,
+            [id]: !prevCheckedTerms[id],
+        }));
+        console.log(checkedTerms)
+    };
 
     return (
         <div className="container">
@@ -354,7 +387,7 @@ function SignUp() {
                                 required
                             />
                         </div>
-                        
+
                         <div className="inputContainer">
                             <label htmlFor="cep"></label>
                             <input
@@ -463,26 +496,30 @@ function SignUp() {
 
                         <ul className="divTerms">
                             {terms.map((term) => (
-                                <li className="termField">
+                                <li className="termField" key={term.terms_id}>
                                     <input
                                         type="checkbox"
-                                        name="termos"
+                                        name="termo"
                                         className="inputTerms"
+                                        checked={!!checkedTerms[term.terms_id]}
+                                        onChange={() => { handleCheckboxChange(term.terms_id) }}
                                         required={term.terms_mandatory}
                                     />
-                                    <span>{term.terms_title} <a href="/terms">Saiba mais</a></span>
+                                    <span>
+                                        {term.terms_title} <a href="/terms">Saiba mais</a>
+                                    </span>
                                 </li>
                             ))}
                         </ul>
-                        
-                    </div>
-                        <button type="submit">Cadastrar</button>
 
-                        <div className="footer">
-                            <span>Voltar para o </span>
-                            <a href="/login">Login</a>
-                        </div>
-                    
+                    </div>
+                    <button type="submit">Cadastrar</button>
+
+                    <div className="footer">
+                        <span>Voltar para o </span>
+                        <a href="/login">Login</a>
+                    </div>
+
                 </form>
             </div>
         </div>

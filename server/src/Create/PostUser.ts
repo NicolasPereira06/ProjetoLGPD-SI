@@ -34,12 +34,12 @@ function SignUp(): express.Router {
 
       const hashedPassword = await bcrypt.hash(user_password, 10);
 
-      await DB.query(
-        'INSERT INTO Users (user_first_name, user_last_name, user_cpf, user_date_birth, user_cellphone, user_address, user_email, user_password) VALUES ($1, $2, $3, $4, $5::jsonb, $6, $7, $8)',
+      const result = await DB.query(
+        'INSERT INTO Users (user_first_name, user_last_name, user_cpf, user_date_birth, user_cellphone, user_address, user_email, user_password) VALUES ($1, $2, $3, $4, $5::jsonb, $6, $7, $8) RETURNING user_id',
         [user_first_name, user_last_name, user_cpf, user_date_birth, user_cellphone, JSON.stringify(user_address), user_email, hashedPassword]
       );
 
-      res.status(200).json({ message: 'Usuário criado com sucesso' });
+      res.status(200).json({ message: 'Usuário criado com sucesso', user_id: result.rows[0].user_id });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

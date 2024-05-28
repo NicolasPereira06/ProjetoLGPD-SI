@@ -16,6 +16,7 @@ import GetUserTerms from './Read/GetUserTerms';
 import AddTerm from './Create/PostTerm';
 import PutTerms from './Update/PutTerms';
 import DeleteTerms from './Delete/DeleteTerms';
+import PostUserTerms from './Create/PostUserTerms';
 
 const app = express();
 const port = 3001;
@@ -84,9 +85,9 @@ app.use('/Terms', AddTerm())
 
 // -------------------------------------------------
 // CRUD - UserTerms
-app
-// // Create
-// app.use('/UserTerms', PostUserTerms())
+
+// Create
+app.use('/UserTerms', PostUserTerms())
 
 // Read
 app.use('/UserTerms', GetUserTerms())
