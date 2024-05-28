@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FormEvent, FormEventHandler, useEffect } from "react";
+import { useState, ChangeEvent, FormEventHandler, useEffect } from "react";
 import logo from "../../logo.svg";
 import "./styles.css";
 
@@ -309,7 +309,11 @@ function SignUp() {
             ...prevCheckedTerms,
             [id]: !prevCheckedTerms[id],
         }));
-        console.log(checkedTerms)
+    };
+
+    const handleTermClick = (id: string) => {
+        localStorage.setItem('TermID', id);
+        window.location.href = '/terms';
     };
 
     return (
@@ -506,7 +510,7 @@ function SignUp() {
                                         required={term.terms_mandatory}
                                     />
                                     <span>
-                                        {term.terms_title} <a href="/terms">Saiba mais</a>
+                                        {term.terms_title} <a href="#" onClick={() => handleTermClick(term.terms_id)}>Saiba mais</a>
                                     </span>
                                 </li>
                             ))}

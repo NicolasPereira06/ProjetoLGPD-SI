@@ -95,7 +95,7 @@ const ManagementTerm: React.FC = () => {
             const responseData = await response.json();
             if (responseData.success) {
                 setShowModal(false);
-                alert('Atualizado com sucesso');
+                alert('Sucesso');
                 await fetchTerms();
             } else {
                 throw new Error('Erro ao adicionar/atualizar termo: ' + responseData.message);

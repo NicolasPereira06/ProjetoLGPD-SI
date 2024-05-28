@@ -11,7 +11,7 @@ import DB from './ConnectDB/db';
 import SignUpAdmin from './Create/PostAdmin';
 import Backup from './Backup&Restore/backup';
 import Restore from './Backup&Restore/restore';
-import GetTerms from './Read/GetTerms';
+import { GetTerms, GetTermsId } from './Read/GetTerms';
 import GetUserTerms from './Read/GetUserTerms';
 import AddTerm from './Create/PostTerm';
 import PutTerms from './Update/PutTerms';
@@ -79,6 +79,7 @@ app.use('/Terms', PutTerms())
 
 // Read
 app.use('/Terms', GetTerms())
+app.use('/Terms', GetTermsId())
 
 // Create
 app.use('/Terms', AddTerm())
