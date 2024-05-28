@@ -20,6 +20,9 @@ const CustomDropdown = () => {
     newPassword: '',
     confirmPassword: ''
   });
+  const [showManageTermsModal, setShowManageTermsModal] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
   const navigate = useNavigate()
 
   const fetchUserData = async () => {
@@ -37,6 +40,21 @@ const CustomDropdown = () => {
     }
   };
 
+//   const fetchTerms = async () => {
+//     try {
+//         const response = await fetch(`http://localhost:3001/Terms/GetTerms`, {
+//             method: 'GET'
+//         });
+//         if (!response.ok) {
+//             throw new Error('Erro ao carregar os termos');
+//         }
+//         const data = await response.json();
+//         setTerms(data);
+//     } catch (error) {
+//         console.error(error);
+//     }
+// };
+
   useEffect(() => {
     fetchUserData();
   }, []);
@@ -46,6 +64,7 @@ const CustomDropdown = () => {
     setShowEditDataModal(false);
     setShowDeleteModal(false);
     setShowSairModal(false);
+    setShowManageTermsModal(false);
   };
 
   const handleLogout = async () => {
@@ -61,6 +80,8 @@ const CustomDropdown = () => {
 
   const handleShowSairModal = () => setShowSairModal(true);
 
+  const handleShowManageTermsModal = () => setShowManageTermsModal(true);
+
   async function searchCEP(cep: string) {
     try {
       const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
@@ -70,7 +91,7 @@ const CustomDropdown = () => {
         setBairro(data.bairro);
         setCidade(data.localidade);
         setEstado(data.uf);
-  
+
         setFormData((prevFormData: any) => ({
           ...prevFormData,
           user_address: {
@@ -92,25 +113,25 @@ const CustomDropdown = () => {
 
   const handlePasswordChange = async () => {
     const userId = localStorage.getItem('userId');
-  
+
     const isEmpty = Object.values(passwordData).some(value => value === '' || value === null);
     if (isEmpty) {
       alert('Por favor, preencha todos os campos.');
       return;
     }
-  
+
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       alert('As senhas não coincidem');
       return;
     }
-  
+
     // Verificação de senha
     const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{7,})/;
     if (!passwordRegex.test(passwordData.newPassword)) {
       alert('A nova senha deve ter pelo menos 7 caracteres, um caractere especial e uma letra maiúscula.');
       return;
     }
-  
+
     try {
       const response = await fetch(`http://localhost:3001/PutPasswordUser/UpdatePassword/${userId}`, {
         method: 'PUT',
@@ -122,7 +143,7 @@ const CustomDropdown = () => {
           user_senha: passwordData.newPassword,
         }),
       });
-  
+
       if (!response.ok) {
         const result = await response.json();
         alert(result.message);
@@ -141,7 +162,7 @@ const CustomDropdown = () => {
   function formatCPF(cpf: string) {
     // Remove caracteres não numéricos
     cpf = cpf.replace(/\D/g, '');
-    
+
     // Aplica a formatação
     if (cpf.length <= 3) {
       return cpf;
@@ -153,11 +174,11 @@ const CustomDropdown = () => {
       return `${cpf.slice(0, 3)}.${cpf.slice(3, 6)}.${cpf.slice(6, 9)}-${cpf.slice(9, 11)}`;
     }
   }
-  
+
   function formatCEP(cep: string) {
     // Remove caracteres não numéricos
     cep = cep.replace(/\D/g, '');
-  
+
     // Aplica a formatação
     if (cep.length <= 5) {
       return cep;
@@ -169,7 +190,7 @@ const CustomDropdown = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     let formattedValue = value;
-  
+
     if (id === 'user_cpf') {
       formattedValue = formatCPF(value);
     } else if (id === 'user_address.cep') {
@@ -178,7 +199,7 @@ const CustomDropdown = () => {
         searchCEP(formattedValue.replace(/\D/g, ''));
       }
     }
-  
+
     const [field, subfield] = id.split('.');
     if (subfield) {
       // Handle nested fields
@@ -196,7 +217,7 @@ const CustomDropdown = () => {
       }));
     }
   };
-  
+
 
   const handlePasswordInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -279,13 +300,16 @@ const CustomDropdown = () => {
       console.error('Erro ao excluir usuário:', error);
     }
   };
-  
+
+
+
 
 
   return (
     <>
       <DropdownButton id="dropdown-basic-button" title="Opções" variant="primary">
         <Dropdown.Item onClick={handleShowEditDataModal}>Editar dados</Dropdown.Item>
+        <Dropdown.Item onClick={handleShowManageTermsModal}>Gerenciar termos</Dropdown.Item>
         <Dropdown.Item onClick={handleShowChangePasswordModal}>Mudar senha</Dropdown.Item>
         <Dropdown.Item onClick={handleShowDeleteModal}>Excluir dados</Dropdown.Item>
         <Dropdown.Item className="logout-item" onClick={handleShowSairModal}>Sair</Dropdown.Item>
@@ -463,6 +487,36 @@ const CustomDropdown = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      
+      {/* Modal para gerenciar termos */}
+      <Modal show={showManageTermsModal} onHide={handleClose} dialogClassName="custom-modal" centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Gerenciar Termos</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="custom-modal-body">
+          <Form>
+            <Form.Check
+              type="checkbox"
+              label="Aceito os termos e condições"
+              checked={termsAccepted}
+              onChange={() => setTermsAccepted(!termsAccepted)}
+            />
+          </Form>
+        </Modal.Body>
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="secondary" onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button variant="primary" onClick={() => {
+            // Lógica para salvar os termos aceitos
+            // Por exemplo, enviar para a API ou atualizar o estado do usuário
+            handleClose();
+          }}>
+            Salvar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
     </>
   );
 };
