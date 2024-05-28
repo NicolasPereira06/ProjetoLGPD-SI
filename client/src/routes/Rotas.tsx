@@ -18,7 +18,7 @@ export const Rotas = () => {
                 <Route
                     path="/userscreen"
                     element={
-                        <PrivateRouteUser>
+                        <PrivateRouteUser> 
                             <UserScreen />
                         </PrivateRouteUser>
                     }
@@ -31,7 +31,7 @@ export const Rotas = () => {
                         </PrivateRouteAdmin>
                     }     
                 />
-                                <Route 
+                <Route 
                     path="/managementterm" 
                     element={
                         <PrivateRouteAdmin>
