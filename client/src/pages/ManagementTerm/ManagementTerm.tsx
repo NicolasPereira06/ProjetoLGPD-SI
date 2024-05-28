@@ -71,6 +71,7 @@ const ManagementTerm: React.FC = () => {
     const handleUpload = async () => {
         if (!termTitle || !termBody || termIsMandatory === null) { // Verifica se o termIsMandatory não é null
             alert('Por favor, preencha todos os campos.');
+            alert('Adicionado com sucesso');
             return;
         }
 
@@ -94,6 +95,7 @@ const ManagementTerm: React.FC = () => {
             const responseData = await response.json();
             if (responseData.success) {
                 setShowModal(false);
+                alert('Atualizado com sucesso');
                 await fetchTerms();
             } else {
                 throw new Error('Erro ao adicionar/atualizar termo: ' + responseData.message);
@@ -248,4 +250,3 @@ const ManagementTerm: React.FC = () => {
 }
 
 export default ManagementTerm;
-
