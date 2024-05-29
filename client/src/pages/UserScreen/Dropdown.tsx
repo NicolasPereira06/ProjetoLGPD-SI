@@ -491,7 +491,7 @@ const CustomDropdown = () => {
       {/* Modal para gerenciar termos */}
       <Modal show={showManageTermsModal} onHide={handleClose} dialogClassName="custom-modal" centered>
         <Modal.Header closeButton>
-          <Modal.Title>Gerenciar Termos</Modal.Title>
+          <Modal.Title>Gerenciar Aceites</Modal.Title>
         </Modal.Header>
         <Modal.Body className="custom-modal-body">
           <Form>
