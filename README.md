@@ -15,4 +15,4 @@ Alguns Critérios:
 
 - Termos de Consentimentos (Artigo 6)
 - CRUD com criptografia dos dados (Artigo 17 e 19)
-- Exclusão de dados e Recuperação apos o backup
+- Lógica para exclusão de dados no backup
