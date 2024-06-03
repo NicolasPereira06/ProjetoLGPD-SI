@@ -11,7 +11,7 @@ type Term = {
 
 function SignUp() {
     const [terms, setTerms] = useState<Term[]>([]);
-    const [userId, setUserId] = useState<string | null>(null);
+    // const [userId, setUserId] = useState<string | null>(null);
     const [checkedTerms, setCheckedTerms] = useState<{ [key: string]: boolean }>({});
     const [formData, setFormData] = useState({
         user_first_name: "",
