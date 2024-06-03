@@ -215,6 +215,11 @@ const CustomDropdown = () => {
     }
   };
 
+  function formatPhone(phone: string) {
+    phone = phone.replace(/\D/g, "");
+    return phone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+  }
+
   function formatCPF(cpf: string) {
     // Remove caracteres não numéricos
     cpf = cpf.replace(/\D/g, '');
@@ -254,6 +259,8 @@ const CustomDropdown = () => {
       if (formattedValue.replace(/\D/g, '').length === 8) {  // CEP deve ter 8 dígitos
         searchCEP(formattedValue.replace(/\D/g, ''));
       }
+    } else if (id === 'user_cellphone') {
+      formattedValue = formatPhone(value);
     }
 
     const [field, subfield] = id.split('.');
@@ -288,6 +295,7 @@ const CustomDropdown = () => {
 
     const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
     const cepRegex = /^\d{5}-\d{3}$/;
+    const phoneRegex = /^\(\d{2}\) \d{4,5}-\d{4}$/;
 
     const isEmpty = Object.keys(formData).some(key => {
       if (key.startsWith('user_address')) {
@@ -309,6 +317,11 @@ const CustomDropdown = () => {
       return;
     }
 
+    if (!phoneRegex.test(formData.user_cellphone)) {
+      alert('Por favor, insira um número de telefone válido.');
+      return;
+    }
+    
     if (!cepRegex.test(formData.user_address?.cep)) {
       alert('Por favor, insira um CEP válido.');
       return;

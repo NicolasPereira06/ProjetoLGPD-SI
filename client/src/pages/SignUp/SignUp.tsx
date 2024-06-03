@@ -36,6 +36,7 @@ function SignUp() {
         user_cpf: "",
         user_address_cep: "",
         user_password: "",
+        user_cellphone: "",
         general: ""
     });
 
@@ -68,6 +69,13 @@ function SignUp() {
                 [id]: value
             }));
             validatePassword(value);
+        } else if (id === "user_cellphone") {
+            const formattedPhone = formatPhone(value);
+            setFormData(prevState => ({
+                ...prevState,
+                [id]: formattedPhone
+            }));
+            validatePhone(formattedPhone);
         } else if (id.startsWith("user_address")) {
             const addressField = id.split("_")[2]; // Obtém o nome do campo de endereço
             setFormData(prevState => ({
@@ -81,6 +89,29 @@ function SignUp() {
             setFormData(prevState => ({
                 ...prevState,
                 [id]: value
+            }));
+        }
+    };
+
+    const formatPhone = (phone: string) => {
+        phone = phone.replace(/\D/g, "");
+        if (phone.length === 11) {
+            return phone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+        }
+        return phone;
+    };
+    
+    const validatePhone = (phone: string) => {
+        const phoneRegex = /^\(\d{2}\) \d{5}\-\d{4}$/;
+        if (!phoneRegex.test(phone)) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                user_cellphone: "Número de telefone inválido. Formato esperado: (00) 00000-0000"
+            }));
+        } else {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                user_cellphone: ""
             }));
         }
     };
@@ -210,6 +241,7 @@ function SignUp() {
             user_cpf: "",
             user_address_cep: "",
             user_password: "",
+            user_cellphone: "",
             general: ""
         });
     };
@@ -392,6 +424,7 @@ function SignUp() {
                                 onChange={handleChange}
                                 required
                             />
+                            {errors.user_cellphone && <span className="error">{errors.user_cellphone}</span>}
                         </div>
 
                         <div className="inputContainer">
