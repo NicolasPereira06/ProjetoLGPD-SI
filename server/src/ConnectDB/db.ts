@@ -1,13 +1,16 @@
 import { Pool } from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Configurações do primeiro banco de dados
 const DB = new Pool({
-  connectionString: 'postgres://sfnrsfac:HEN6Pe--qX857xZ5CR6j3Bqp7JLxFmsE@isabelle.db.elephantsql.com/sfnrsfac',
+  connectionString: process.env.DB_CONNECTION_STRING,
 });
 
 // Configurações do segundo banco de dados
 const DBKey = new Pool({
-  connectionString: 'postgres://hgqxjaah:GmHy972bfwfW5-17BEdDkVvWbBbH14xr@isabelle.db.elephantsql.com/hgqxjaah',
+  connectionString: process.env.DB_KEY_CONNECTION_STRING,
 });
 
 export { DB, DBKey };
