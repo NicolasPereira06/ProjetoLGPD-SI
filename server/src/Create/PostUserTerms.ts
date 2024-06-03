@@ -14,7 +14,7 @@ function PostUserTerms(): express.Router {
       for (const term of termsArray) {
         const { user_id, terms_id, accepted } = term;
         await DB.query(
-            'INSERT INTO UserTerms (user_id, terms_id, accepted) VALUES ($1, $2, $3) ON CONFLICT (user_id, terms_id) DO UPDATE SET accepted = $3, accepted_at = CURRENT_TIMESTAMP',
+            'INSERT INTO UserTerms (user_id, terms_id, accepted) VALUES ($1, $2, $3) ',
             [user_id, terms_id, accepted]
         );
       }
