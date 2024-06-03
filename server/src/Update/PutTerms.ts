@@ -1,5 +1,5 @@
 import express from 'express';
-import DB from '../ConnectDB/db';
+import { DB } from '../ConnectDB/db';
 
 function PutTerms(): express.Router {
     const router = express.Router();

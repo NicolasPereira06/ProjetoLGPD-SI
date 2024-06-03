@@ -7,10 +7,8 @@ import EditUser from './Update/PutUser';
 import DeleteUser from './Delete/DeleteUser';
 import UpdatePassword from './Update/PutPasswordUser';
 import Login from './Auth/Login';
-import DB from './ConnectDB/db';
+import {DB, DBKey} from './ConnectDB/db';
 import SignUpAdmin from './Create/PostAdmin';
-import Backup from './Backup&Restore/backup';
-import Restore from './Backup&Restore/restore';
 import { GetTerms, GetTermsId } from './Read/GetTerms';
 import GetUserTerms from './Read/GetUserTerms';
 import AddTerm from './Create/PostTerm';
@@ -38,10 +36,13 @@ DB.connect(err => {
   console.log('Conectado ao banco de dados PostgreSQL.');
 });
 
-// Backup & Restore
-
-app.use(Backup())
-app.use(Restore())
+DBKey.connect(err => {
+  if (err) {
+    console.error('Erro ao conectar ao banco de dados:', err);
+    return;
+  }
+  console.log('Conectado ao banco de dados KEY.');
+});
 
 // Authentication
 

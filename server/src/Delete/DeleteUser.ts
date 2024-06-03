@@ -1,26 +1,27 @@
 import express from 'express';
-import DB from '../ConnectDB/db';
+import { DB, DBKey } from '../ConnectDB/db'; // Importe ambas as instâncias dos bancos de dados
 
-function DeleteUser(): express.Router {
-    const router = express.Router();
+function DeleteUserKey(): express.Router {
+  const router = express.Router();
 
-    router.delete('/RemoveUser/:user_id', async (req, res) => {
-        const { user_id } = req.params;
+  router.delete('/RemoveUser/:user_id', async (req, res) => {
+    const { user_id } = req.params;
 
-        try {
-            const result = await DB.query('DELETE FROM Users WHERE user_id = $1', [user_id]);
+    try {
+      // Exclui a chave de criptografia associada ao usuário
+      const keyResult = await DBKey.query('DELETE FROM Keys WHERE user_id = $1', [user_id]);
 
-            if (result.rowCount === 0) {
-                res.status(404).json({ message: 'Usuário não encontrado para exclusão' });
-            } else {
-                res.status(200).json({ message: 'Usuário excluído com sucesso' });
-            }
-        } catch (error: any) {
-            res.status(500).json({ error: error.message });
-        }
-    });
+      if (keyResult.rowCount === 0) {
+        return res.status(404).json({ message: 'Chave de criptografia não encontrada para exclusão' });
+      }
 
-    return router;
+      res.status(200).json({ message: 'Cadastro excluído com sucesso' });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  return router;
 }
 
-export default DeleteUser;
+export default DeleteUserKey;

@@ -1,6 +1,7 @@
 import { useState, ChangeEvent, FormEventHandler, useEffect } from "react";
 import logo from "../../logo.svg";
 import "./styles.css";
+import { error } from "console";
 
 type Term = {
     terms_id: string,
@@ -245,6 +246,7 @@ function SignUp() {
                 clearFields();
             } else {
                 const errorData = await response.json();
+                console.log(errorData)
                 if (errorData.error === 'CPF já cadastrado') {
                     alert(errorData.error);
                 } else if (errorData.error === 'Email já cadastrado') {

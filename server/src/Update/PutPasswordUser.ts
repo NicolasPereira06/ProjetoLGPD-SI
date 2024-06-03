@@ -1,6 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
-import DB from '../ConnectDB/db';
+import { DB } from '../ConnectDB/db';
 
 function UpdatePassword(): express.Router {
     const router = express.Router();
