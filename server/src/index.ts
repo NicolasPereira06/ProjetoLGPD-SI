@@ -10,7 +10,7 @@ import Login from './Auth/Login';
 import {DB, DBKey} from './ConnectDB/db';
 import SignUpAdmin from './Create/PostAdmin';
 import { GetTerms, GetTermsId } from './Read/GetTerms';
-import GetUserTerms from './Read/GetUserTerms';
+import {GetUserTerms, GetUserTermsLatestAcceptance} from './Read/GetUserTerms';
 import AddTerm from './Create/PostTerm';
 import PutTerms from './Update/PutTerms';
 import DeleteTerms from './Delete/DeleteTerms';
@@ -93,6 +93,7 @@ app.use('/UserTerms', PostUserTerms())
 
 // Read
 app.use('/UserTerms', GetUserTerms())
+app.use('/UserTerms', GetUserTermsLatestAcceptance())
 
 // Delete
 app.use('/DeleteTerms', DeleteTerms())

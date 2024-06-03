@@ -3,6 +3,13 @@ import { DropdownButton, Dropdown, Modal, Button, Form } from 'react-bootstrap';
 import '../UserScreen/Dropdown.css';
 import { useNavigate } from "react-router-dom";
 
+type UserTerms = {
+  terms_id: string;
+  terms_title: string;
+  terms_content: string;
+  accepted: boolean;
+}
+
 const CustomDropdown = () => {
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -21,7 +28,8 @@ const CustomDropdown = () => {
     confirmPassword: ''
   });
   const [showManageTermsModal, setShowManageTermsModal] = useState(false);
-  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [userTerms, setUserTerms] = useState<UserTerms[]>([]);
+  const [checkedTerms, setCheckedTerms] = useState<{ [key: string]: boolean }>({});
 
   const navigate = useNavigate()
 
@@ -40,20 +48,68 @@ const CustomDropdown = () => {
     }
   };
 
-//   const fetchTerms = async () => {
-//     try {
-//         const response = await fetch(`http://localhost:3001/Terms/GetTerms`, {
-//             method: 'GET'
-//         });
-//         if (!response.ok) {
-//             throw new Error('Erro ao carregar os termos');
-//         }
-//         const data = await response.json();
-//         setTerms(data);
-//     } catch (error) {
-//         console.error(error);
-//     }
-// };
+  const fetchUserTerms = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        throw new Error('Usuário não identificado');
+      }
+
+      const response = await fetch(`http://localhost:3001/UserTerms/GetUserTermsLatestAcceptance/${userId}`, {
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao carregar os termos');
+      }
+
+      const data = await response.json();
+      setUserTerms(data);
+      console.log("Dados carregados com sucesso");
+    } catch (error) {
+      console.error('Erro ao buscar termos do usuário:', error);
+    }
+  };
+
+  const registerUserTerms = async (checkedTerms: Record<string, boolean>) => {
+    const user_id = localStorage.getItem('userId');
+    const formData = Object.entries(checkedTerms).map(([terms_id, accepted]) => ({
+      user_id,
+      terms_id,
+      accepted
+    }));
+    try {
+      const response = await fetch('http://localhost:3001/UserTerms/PostUserTerms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        alert('Vinculado com sucesso');
+      } else {
+        const errorData = await response.json();
+        alert('Erro ao vincular termo: ' + errorData.error);
+      }
+    } catch (error) {
+      console.error('Erro ao vincular termo:', error);
+      alert('Erro ao vincular termo');
+    }
+  };
+
+  const handleCheckboxChange = (id: string) => {
+    setCheckedTerms((prevCheckedTerms) => ({
+      ...prevCheckedTerms,
+      [id]: !prevCheckedTerms[id],
+    }));
+  };
+
+  const handleTermClick = (id: string) => {
+    localStorage.setItem('TermID', id);
+    window.location.href = '/terms';
+  };
 
   useEffect(() => {
     fetchUserData();
@@ -301,15 +357,13 @@ const CustomDropdown = () => {
     }
   };
 
-
-
-
-
   return (
     <>
       <DropdownButton id="dropdown-basic-button" title="Opções" variant="primary">
         <Dropdown.Item onClick={handleShowEditDataModal}>Editar dados</Dropdown.Item>
-        <Dropdown.Item onClick={handleShowManageTermsModal}>Gerenciar termos</Dropdown.Item>
+        <Dropdown.Item
+          onClick={() => { handleShowManageTermsModal(); fetchUserTerms(); }}
+        >Gerenciar termos</Dropdown.Item>
         <Dropdown.Item onClick={handleShowChangePasswordModal}>Mudar senha</Dropdown.Item>
         <Dropdown.Item onClick={handleShowDeleteModal}>Excluir dados</Dropdown.Item>
         <Dropdown.Item className="logout-item" onClick={handleShowSairModal}>Sair</Dropdown.Item>
@@ -487,29 +541,34 @@ const CustomDropdown = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      
+
       {/* Modal para gerenciar termos */}
       <Modal show={showManageTermsModal} onHide={handleClose} dialogClassName="custom-modal" centered>
         <Modal.Header closeButton>
-          <Modal.Title>Gerenciar Termos</Modal.Title>
+          <Modal.Title>Gerenciar Aceites</Modal.Title>
         </Modal.Header>
         <Modal.Body className="custom-modal-body">
-          <Form>
-            <Form.Check
-              type="checkbox"
-              label="Aceito os termos e condições"
-              checked={termsAccepted}
-              onChange={() => setTermsAccepted(!termsAccepted)}
-            />
-          </Form>
+          {userTerms.map((term) => (
+            <li className="termField" key={term.terms_id}>
+              <input
+                type="checkbox"
+                name="termo"
+                className="inputTerms"
+                checked={!!checkedTerms[term.terms_id]}
+                onChange={() => { handleCheckboxChange(term.terms_id) }}
+              />
+              <span>
+                {term.terms_title} <a href="#" onClick={() => handleTermClick(term.terms_id)}>Saiba mais</a>
+              </span>
+            </li>
+          ))}
         </Modal.Body>
         <Modal.Footer className="d-flex justify-content-center">
           <Button variant="secondary" onClick={handleClose}>
             Cancelar
           </Button>
           <Button variant="primary" onClick={() => {
-            // Lógica para salvar os termos aceitos
-            // Por exemplo, enviar para a API ou atualizar o estado do usuário
+            registerUserTerms(checkedTerms);
             handleClose();
           }}>
             Salvar

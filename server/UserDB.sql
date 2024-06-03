@@ -33,5 +33,4 @@ CREATE TABLE UserTerms (
     accepted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (terms_id) REFERENCES Terms(terms_id) ON DELETE CASCADE,
-    UNIQUE (user_id, terms_id)
 );
