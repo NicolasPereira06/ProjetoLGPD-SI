@@ -32,5 +32,19 @@ CREATE TABLE UserTerms (
     accepted BOOLEAN NOT NULL,
     accepted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (terms_id) REFERENCES Terms(terms_id) ON DELETE CASCADE,
+    FOREIGN KEY (terms_id) REFERENCES Terms(terms_id) ON DELETE CASCADE
 );
+
+CREATE VIEW DecryptedUsers AS
+SELECT
+    user_id,
+    user_first_name,
+    user_last_name,
+    user_cpf,
+    user_date_birth,
+    user_cellphone,
+    user_address::jsonb AS user_address,
+    user_email,
+    user_password
+FROM
+    Users;

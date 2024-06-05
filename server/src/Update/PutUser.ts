@@ -2,6 +2,7 @@ import express from 'express';
 import crypto from 'crypto';
 import CryptoJS from 'crypto-js';
 import { DB, DBKey } from '../ConnectDB/db'; // Importe ambas as instâncias dos bancos de dados
+import createDecryptedUsersView from '../ConnectDB/decrypted';
 
 function encryptData(data: string, key: string): string {
   return CryptoJS.AES.encrypt(data, key).toString();
@@ -46,6 +47,8 @@ function EditUser(): express.Router {
       const result = await DB.query(queryText, [user_id, ...values]);
 
       const updatedUser = result.rows[0];
+
+      createDecryptedUsersView()
 
       res.status(200).json({
         message: 'Usuário atualizado com sucesso',

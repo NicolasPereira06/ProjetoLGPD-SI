@@ -1,5 +1,6 @@
 import express from 'express';
 import { DB, DBKey } from '../ConnectDB/db'; // Importe ambas as instâncias dos bancos de dados
+import createDecryptedUsersView from '../ConnectDB/decrypted';
 
 function DeleteUserKey(): express.Router {
   const router = express.Router();
@@ -14,6 +15,8 @@ function DeleteUserKey(): express.Router {
       if (keyResult.rowCount === 0) {
         return res.status(404).json({ message: 'Chave de criptografia não encontrada para exclusão' });
       }
+
+      createDecryptedUsersView()
 
       res.status(200).json({ message: 'Cadastro excluído com sucesso' });
     } catch (error: any) {

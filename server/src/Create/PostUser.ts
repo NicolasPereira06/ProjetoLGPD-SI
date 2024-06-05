@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import CryptoJS from 'crypto-js';
 import { DB, DBKey } from '../ConnectDB/db'; // Importe ambas as instâncias dos bancos de dados
+import createDecryptedUsersView from '../ConnectDB/decrypted';
 
 function generateSecretKey(): string {
   return crypto.randomUUID().toString();
@@ -38,32 +39,14 @@ const SignUp = (): express.Router => {
         user_password
       } = req.body;
 
-      // Recupera todas as chaves e dados do banco para verificação
-      const keysResult = await DBKey.query('SELECT * FROM Keys');
-      const usersResult = await DB.query('SELECT * FROM Users');
-
-      const isCPFUsed = usersResult.rows.some(user => {
-        const userKeyObj = keysResult.rows.find(key => key.user_id === user.user_id);
-        if (!userKeyObj) return false; // Verifica se a chave foi encontrada
-        const userKey = userKeyObj.key_name;
-        const decryptedCPF = decryptData(user.user_cpf, userKey);
-        return decryptedCPF === user_cpf;
-      });
-
-      if (isCPFUsed) {
+      const cpfCheck = await DB.query('SELECT * FROM DecryptedUsers WHERE user_cpf = $1', [user_cpf]);
+      if (cpfCheck.rows.length > 0) {
         return res.status(400).json({ error: 'CPF já cadastrado' });
       }
 
-      const isEmailUsed = usersResult.rows.some(user => {
-        const userKeyObj = keysResult.rows.find(key => key.user_id === user.user_id);
-        if (!userKeyObj) return false; // Verifica se a chave foi encontrada
-        const userKey = userKeyObj.key_name;
-        const decryptedEmail = decryptData(user.user_email, userKey);
-        return decryptedEmail === user_email;
-      });
-
-      if (isEmailUsed) {
-        return res.status(401).json({ error: 'Email já cadastrado' });
+      const emailCheck = await DB.query('SELECT * FROM DecryptedUsers WHERE user_email = $1', [user_email]);
+      if (emailCheck.rows.length > 0) {
+        return res.status(401).json({error: 'Email já cadastrado'})
       }
 
       const hashedPassword = await bcrypt.hash(user_password, 10);
@@ -88,6 +71,8 @@ const SignUp = (): express.Router => {
         [result.rows[0].user_id, SECRET_KEY]
       );
 
+      createDecryptedUsersView()
+      
       res.status(200).json({ message: 'Usuário criado com sucesso', user_id: result.rows[0].user_id });
     } catch (error: any) {
       res.status(500).json({ error: error.message });

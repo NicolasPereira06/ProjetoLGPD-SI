@@ -15,6 +15,7 @@ import AddTerm from './Create/PostTerm';
 import PutTerms from './Update/PutTerms';
 import DeleteTerms from './Delete/DeleteTerms';
 import PostUserTerms from './Create/PostUserTerms';
+import createDecryptedUsersView from './ConnectDB/decrypted';
 
 const app = express();
 const port = 3001;
@@ -43,6 +44,8 @@ DBKey.connect(err => {
   }
   console.log('Conectado ao banco de dados KEY.');
 });
+
+createDecryptedUsersView()
 
 // Authentication
 

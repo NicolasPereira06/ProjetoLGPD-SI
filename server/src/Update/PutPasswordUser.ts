@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import { DB } from '../ConnectDB/db';
+import createDecryptedUsersView from '../ConnectDB/decrypted';
 
 function UpdatePassword(): express.Router {
     const router = express.Router();
@@ -28,6 +29,8 @@ function UpdatePassword(): express.Router {
                 const hashedPassword = await bcrypt.hash(user_senha, 10);
 
                 await DB.query(`UPDATE Users SET ${passwordFieldName} = $1 WHERE user_id = $2`, [hashedPassword, user_id]);
+
+                createDecryptedUsersView()
 
                 res.status(200).json({ message: 'Senha atualizada com sucesso' });
             }
