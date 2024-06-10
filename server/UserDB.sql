@@ -18,22 +18,65 @@ CREATE TABLE Admin(
     admin_password VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Terms (
-    terms_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    terms_title VARCHAR(255),
-    terms_content VARCHAR(10000),
-    terms_mandatory BOOLEAN NOT NULL
+CREATE TABLE term (
+    term_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    term_title VARCHAR(255),
+    term_content VARCHAR(10000)
 );
 
-CREATE TABLE UserTerms (
+CREATE TABLE user_term (
     user_term_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    accepted BOOLEAN NOT NULL CHECK (accepted = true),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_id UUID NOT NULL,
-    terms_id UUID NOT NULL,
-    accepted BOOLEAN NOT NULL,
-    accepted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    term_id UUID NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (terms_id) REFERENCES Terms(terms_id) ON DELETE CASCADE
+    FOREIGN KEY (term_id) REFERENCES term(term_id) ON DELETE CASCADE,
+    UNIQUE (user_id, term_id)
 );
+
+CREATE TABLE optional (
+    optional_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    optional_title VARCHAR(255) NOT NULL,
+    optional_content TEXT NOT NULL,
+    term_id UUID NOT NULL,
+    FOREIGN KEY (term_id) REFERENCES term(term_id) ON DELETE CASCADE
+);
+
+CREATE TABLE user_optional (
+    user_optional_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    accepted BOOLEAN NOT NULL,
+    user_id UUID NOT NULL,
+    optional_id UUID NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (optional_id) REFERENCES optional(optional_id) ON DELETE CASCADE,
+    UNIQUE (user_id, optional_id)
+);
+
+CREATE TABLE user_optional_history (
+    user_optional_history_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    accepted BOOLEAN NOT NULL,
+    user_id UUID NOT NULL,
+    optional_id UUID NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (optional_id) REFERENCES optional(optional_id) ON DELETE CASCADE
+);
+
+CREATE OR REPLACE FUNCTION user_optional_changes() 
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO user_optional_history (user_id, optional_id, accepted, timestamp)
+    VALUES (NEW.user_id, NEW.optional_id, NEW.accepted, CURRENT_TIMESTAMP);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tg_user_optional_changes
+AFTER INSERT OR UPDATE ON user_optional
+FOR EACH ROW
+EXECUTE PROCEDURE user_optional_changes();
+
 
 CREATE VIEW DecryptedUsers AS
 SELECT
