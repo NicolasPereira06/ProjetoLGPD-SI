@@ -10,12 +10,15 @@ import Login from './Auth/Login';
 import {DB, DBKey} from './ConnectDB/db';
 import SignUpAdmin from './Create/PostAdmin';
 import { GetTerms, GetTermsId } from './Read/GetTerms';
-import {GetUserTerms, GetUserTermsLatestAcceptance} from './Read/GetUserTerms';
+import {GetUserTerms} from './Read/GetUserTerms';
+import { GetOptional } from "./Read/GetOptional";
 import AddTerm from './Create/PostTerm';
 import PutTerms from './Update/PutTerms';
 import DeleteTerms from './Delete/DeleteTerms';
 import PostUserTerms from './Create/PostUserTerms';
 import createDecryptedUsersView from './ConnectDB/decrypted';
+import PostUserOptional from './Create/PostUserOptional';
+import { GetUserOptional } from './Read/GetUserOptional';
 
 const app = express();
 const port = 3001;
@@ -76,8 +79,6 @@ app.use('/DeleteUser', DeleteUser())
 // -------------------------------------------------
 // CRUD - Terms
 
-
-
 // Update
 app.use('/Terms', PutTerms())
 
@@ -88,6 +89,9 @@ app.use('/Terms', GetTermsId())
 // Create
 app.use('/Terms', AddTerm())
 
+// Delete
+app.use('/DeleteTerms', DeleteTerms())
+
 // -------------------------------------------------
 // CRUD - UserTerms
 
@@ -96,7 +100,21 @@ app.use('/UserTerms', PostUserTerms())
 
 // Read
 app.use('/UserTerms', GetUserTerms())
-app.use('/UserTerms', GetUserTermsLatestAcceptance())
 
-// Delete
-app.use('/DeleteTerms', DeleteTerms())
+// -------------------------------------------------
+// CRUD - Optional
+
+// Read
+app.use('/Optional', GetOptional())
+
+// Create
+app.use('/Optional', PostUserOptional())
+
+// -------------------------------------------------
+// CRUD - UserOptional
+
+// Create
+// app.use('/UserOptional', PostUserTerms())
+
+// Read
+app.use('/UserOptional', GetUserOptional())
