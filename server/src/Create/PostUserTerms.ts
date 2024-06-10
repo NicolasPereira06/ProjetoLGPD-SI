@@ -12,10 +12,10 @@ function PostUserTerms(): express.Router {
 
     try {
       for (const term of termsArray) {
-        const { user_id, terms_id, accepted } = term;
+        const { user_id, term_id, accepted } = term;
         await DB.query(
-            'INSERT INTO UserTerms (user_id, terms_id, accepted) VALUES ($1, $2, $3) ',
-            [user_id, terms_id, accepted]
+            'INSERT INTO user_term (user_id, term_id, accepted) VALUES ($1, $2, $3) ',
+            [user_id, term_id, accepted]
         );
       }
       res.status(200).json({ message: 'Termo vinculado com sucesso' });

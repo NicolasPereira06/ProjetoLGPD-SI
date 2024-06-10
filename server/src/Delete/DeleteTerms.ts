@@ -4,11 +4,11 @@ import { DB } from '../ConnectDB/db';
 function DeleteTerms(): express.Router {
     const router = express.Router();
 
-    router.delete('/DeleteTerms/:terms_id', async (req, res) => {
-        const { terms_id } = req.params;
+    router.delete('/DeleteTerms/:term_id', async (req, res) => {
+        const { term_id } = req.params;
         
         try {
-            const result = await DB.query('DELETE FROM Terms WHERE terms_id = $1', [terms_id]);
+            const result = await DB.query('DELETE FROM term WHERE term_id = $1', [term_id]);
     
             if (result.rowCount === 0) {
                 res.status(404).json({ message: 'Termo não encontrado para exclusão' });

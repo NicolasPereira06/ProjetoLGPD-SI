@@ -8,7 +8,7 @@ function GetTerms(): express.Router {
 
   router.get('/GetTerms', async (_, res) => {
       try {
-        const result = await DB.query('SELECT * FROM terms;');
+        const result = await DB.query('SELECT * FROM term;');
     
         if (result.rows.length === 0) {
           res.status(404).json({ message: 'Sem termos registrados' });
@@ -28,11 +28,11 @@ function GetTermsId(): express.Router {
 
   const router = express.Router();
 
-  router.get('/GetTermsId/:terms_id', async (req, res) => {
-    const terms_id = req.params.terms_id;
+  router.get('/GetTermsId/:term_id', async (req, res) => {
+    const term_id = req.params.term_id;
     
     try {
-        const result = await DB.query('SELECT * FROM terms WHERE terms_id = $1', [terms_id]);
+        const result = await DB.query('SELECT * FROM term WHERE term_id = $1', [term_id]);
         
         if (result.rows.length > 0) {
             res.json(result.rows[0]);
