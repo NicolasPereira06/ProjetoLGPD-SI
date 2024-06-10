@@ -5,10 +5,9 @@ import "../ManagementTerm/ManagementTerm.css";
 import { useNavigate } from "react-router-dom";
 
 type Term = {
-    terms_id: string;
-    terms_title: string;
-    terms_content: string;
-    terms_mandatory: boolean;
+    term_id: string;
+    term_title: string;
+    term_content: string;
 }
 
 const ManagementTerm: React.FC = () => {
@@ -17,7 +16,6 @@ const ManagementTerm: React.FC = () => {
     const [showConfirmModal, setShowConfirmModal] = useState(false); // Novo estado
     const [termTitle, setTermTitle] = useState('');
     const [termBody, setTermBody] = useState('');
-    const [termIsMandatory, setTermIsMandatory] = useState<Boolean | null>(null); // Alterado para permitir null
     const [isUpdate, setIsUpdate] = useState(false);
     const [currentTerm, setCurrentTerm] = useState<Term | null>(null);
 
@@ -55,27 +53,25 @@ const ManagementTerm: React.FC = () => {
         setIsUpdate(false);
         setTermTitle('');
         setTermBody('');
-        setTermIsMandatory(null); // Define como null ao adicionar um novo termo
         setShowModal(true);
     };
 
     const handleAttTerm = (term: Term) => {
         setCurrentTerm(term);
-        setTermTitle(term.terms_title);
-        setTermBody(term.terms_content);
-        setTermIsMandatory(term.terms_mandatory);
+        setTermTitle(term.term_title);
+        setTermBody(term.term_content);
         setIsUpdate(true);
         setShowModal(true);
     };
 
     const handleUpload = async () => {
-        if (!termTitle || !termBody || termIsMandatory === null) { // Verifica se o termIsMandatory não é null
+        if (!termTitle || !termBody) { // Verifica se o termIsMandatory não é null
             alert('Por favor, preencha todos os campos.');
             alert('Adicionado com sucesso');
             return;
         }
 
-        const url = isUpdate ? `http://localhost:3001/Terms/PutTerms/${currentTerm?.terms_id}` : 'http://localhost:3001/Terms/AddTerm';
+        const url = isUpdate ? `http://localhost:3001/Terms/PutTerms/${currentTerm?.term_id}` : 'http://localhost:3001/Terms/AddTerm';
         const method = isUpdate ? 'PUT' : 'POST';
 
         try {
@@ -84,7 +80,7 @@ const ManagementTerm: React.FC = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ terms_title: termTitle, terms_content: termBody, terms_mandatory: termIsMandatory })
+                body: JSON.stringify({ term_title: termTitle, term_content: termBody })
             });
 
             if (!response.ok) {
@@ -111,7 +107,7 @@ const ManagementTerm: React.FC = () => {
     };
 
     const handleDeleteTerms = (termId: string) => {
-        setCurrentTerm(terms.find(term => term.terms_id === termId) || null);
+        setCurrentTerm(terms.find(term => term.term_id === termId) || null);
         setShowConfirmModal(true);
     };
 
@@ -119,7 +115,7 @@ const ManagementTerm: React.FC = () => {
         if (!currentTerm) return;
 
         try {
-            const response = await fetch(`http://localhost:3001/DeleteTerms/DeleteTerms/${currentTerm.terms_id}`, {
+            const response = await fetch(`http://localhost:3001/DeleteTerms/DeleteTerms/${currentTerm.term_id}`, {
                 method: 'DELETE'
             });
 
@@ -162,7 +158,7 @@ const ManagementTerm: React.FC = () => {
                             <tbody>
                                 {terms.map((term, index) => (
                                     <tr key={index}>
-                                        <th>{term.terms_title}</th>
+                                        <th>{term.term_title}</th>
                                         <td>
                                             <Dropdown>
                                                 <Dropdown.Toggle variant="primary" id={`dropdown-basic-${index}`}>
@@ -170,7 +166,7 @@ const ManagementTerm: React.FC = () => {
                                                 </Dropdown.Toggle>
                                                 <Dropdown.Menu>
                                                     <Dropdown.Item onClick={() => handleAttTerm(term)}>Atualizar Termo</Dropdown.Item>
-                                                    <Dropdown.Item className="logout-item" onClick={() => handleDeleteTerms(term.terms_id)}>Excluir Termo</Dropdown.Item>
+                                                    <Dropdown.Item className="logout-item" onClick={() => handleDeleteTerms(term.term_id)}>Excluir Termo</Dropdown.Item>
                                                 </Dropdown.Menu>
                                             </Dropdown>
                                         </td>
@@ -195,27 +191,6 @@ const ManagementTerm: React.FC = () => {
                         <Form.Group controlId="formTermBody">
                             <Form.Label>Corpo do Termo de Uso</Form.Label>
                             <Form.Control as="textarea" rows={5} value={termBody} onChange={(e) => setTermBody(e.target.value)} />
-                        </Form.Group>
-                        <Form.Group controlId="formTermIsMandatory">
-                            <Form.Label>O termo é obrigatório? </Form.Label>
-                            <Col>
-                                <Form.Check
-                                    type="radio"
-                                    label="Sim"
-                                    name="termIsMandatory"
-                                    value={'true'}
-                                    checked={termIsMandatory === true}
-                                    onChange={() => setTermIsMandatory(true)}
-                                />
-                                <Form.Check
-                                    type="radio"
-                                    label="Não"
-                                    name="termIsMandatory"
-                                    value={'false'}
-                                    checked={termIsMandatory === false}
-                                    onChange={() => setTermIsMandatory(false)}
-                                />
-                            </Col>
                         </Form.Group>
                     </Form>
                 </Modal.Body>

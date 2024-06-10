@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
 interface Term {
-    terms_title: string;
-    terms_content: string;
+    term_title: string;
+    term_content: string;
 }
 
 const Terms: React.FC = () => {
@@ -36,8 +36,8 @@ const Terms: React.FC = () => {
 
     return (
         <div>
-            <h1>{term.terms_title}</h1>
-            <p>{term.terms_content}</p>
+            <h1>{term.term_title}</h1>
+            <p>{term.term_content}</p>
         </div>
     );
 };

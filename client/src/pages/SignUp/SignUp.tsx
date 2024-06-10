@@ -4,16 +4,24 @@ import "./styles.css";
 import { error } from "console";
 
 type Term = {
-    terms_id: string,
-    terms_title: string;
-    terms_content: string;
-    terms_mandatory: boolean;
+    term_id: string;
+    term_title: string;
+    term_content: string;
+}
+
+type Optional = {
+    optional_id: string;
+    term_id: string;
+    optional_title: string;
+    optional_content: string;
 }
 
 function SignUp() {
     const [terms, setTerms] = useState<Term[]>([]);
+    const [opcionais, setOpcionais] = useState<Optional[]>([]);
     // const [userId, setUserId] = useState<string | null>(null);
     const [checkedTerms, setCheckedTerms] = useState<{ [key: string]: boolean }>({});
+    const [checkedOptional, setCheckedOptional] = useState<{ [key: string]: boolean }>({});
     const [formData, setFormData] = useState({
         user_first_name: "",
         user_last_name: "",
@@ -100,7 +108,7 @@ function SignUp() {
         }
         return phone;
     };
-    
+
     const validatePhone = (phone: string) => {
         const phoneRegex = /^\(\d{2}\) \d{5}\-\d{4}$/;
         if (!phoneRegex.test(phone)) {
@@ -274,6 +282,7 @@ function SignUp() {
             if (response.ok) {
                 const data = await response.json();
                 registerUserTerms(checkedTerms, data.user_id);
+                registerUserOptional(checkedOptional, data.user_id);
                 alert('Cadastro feito com sucesso');
                 clearFields();
             } else {
@@ -293,9 +302,9 @@ function SignUp() {
     };
 
     const registerUserTerms = async (checkedTerms: Record<string, boolean>, user_id: string) => {
-        const formData = Object.entries(checkedTerms).map(([terms_id, accepted]) => ({
+        const formData = Object.entries(checkedTerms).map(([term_id, accepted]) => ({
             user_id,
-            terms_id,
+            term_id,
             accepted
         }));
         try {
@@ -311,11 +320,38 @@ function SignUp() {
                 alert('Vinculado com sucesso');
             } else {
                 const errorData = await response.json();
-            alert('Erro ao vincular termo: ' + errorData.error);
+                alert('Erro ao vincular termo: ' + errorData.error);
             }
         } catch (error) {
             console.error('Erro ao vincular termo:', error);
-        alert('Erro ao vincular termo');
+            alert('Erro ao vincular termo');
+        }
+    };
+
+    const registerUserOptional = async (checkedOptional: Record<string, boolean>, user_id: string) => {
+        const formData = Object.entries(checkedOptional).map(([optional_id, accepted]) => ({
+            user_id,
+            optional_id,
+            accepted
+        }));
+        try {
+            const response = await fetch('http://localhost:3001/Optional/PostUserOptional', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                alert('Vinculado com sucesso');
+            } else {
+                const errorData = await response.json();
+                alert('Erro ao vincular opicional: ' + errorData.error);
+            }
+        } catch (error) {
+            console.error('Erro ao vincular opicional:', error);
+            alert('Erro ao vincular opicional');
         }
     };
 
@@ -334,15 +370,39 @@ function SignUp() {
         }
     };
 
+    const fetchOptional = async () => {
+        try {
+            const response = await fetch(`http://localhost:3001/Optional/GetOptional`, {
+                method: 'GET'
+            });
+            if (!response.ok) {
+                throw new Error('Erro ao carregar os opcionais');
+            }
+            const data = await response.json();
+            setOpcionais(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
         fetchTerms();
+        fetchOptional();
     }, [navigator]);
 
-    const handleCheckboxChange = (id: string) => {
+    const handleTermChange = (id: string) => {
         setCheckedTerms((prevCheckedTerms) => ({
             ...prevCheckedTerms,
             [id]: !prevCheckedTerms[id],
         }));
+        console.log(checkedTerms)
+    };
+    const handleOptionalChange = (id: string) => {
+        setCheckedOptional((prevCheckedOptional) => ({
+            ...prevCheckedOptional,
+            [id]: !prevCheckedOptional[id],
+        }));
+        console.log(checkedOptional)
     };
 
     const handleTermClick = (id: string) => {
@@ -535,17 +595,34 @@ function SignUp() {
 
                         <ul className="divTerms">
                             {terms.map((term) => (
-                                <li className="termField" key={term.terms_id}>
+                                <li className="termField" key={term.term_id}>
                                     <input
                                         type="checkbox"
                                         name="termo"
                                         className="inputTerms"
-                                        checked={!!checkedTerms[term.terms_id]}
-                                        onChange={() => { handleCheckboxChange(term.terms_id) }}
-                                        required={term.terms_mandatory}
+                                        checked={!!checkedTerms[term.term_id]}
+                                        onChange={() => { handleTermChange(term.term_id) }}
+                                        required
                                     />
                                     <span>
-                                        {term.terms_title} <a href="#" onClick={() => handleTermClick(term.terms_id)}>Saiba mais</a>
+                                        {term.term_title} <a href="#" onClick={() => handleTermClick(term.term_id)}>Saiba mais</a>
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+
+                        <ul className="divTerms">
+                            {opcionais.map((optional) => (
+                                <li className="termField" key={optional.optional_id}>
+                                    <input
+                                        type="checkbox"
+                                        name="termo"
+                                        className="inputTerms"
+                                        checked={!!checkedOptional[optional.optional_id]}
+                                        onChange={() => { handleOptionalChange(optional.optional_id) }}
+                                    />
+                                    <span>
+                                        {optional.optional_title} <a href="#" onClick={() => handleTermClick(optional.term_id)}>Saiba mais</a>
                                     </span>
                                 </li>
                             ))}
