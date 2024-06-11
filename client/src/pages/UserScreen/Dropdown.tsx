@@ -98,6 +98,11 @@ const CustomDropdown = () => {
 
       const data = await response.json();
       setUserOpcionais(data);
+      const initialCheckedState = data.reduce((acc: { [key: string]: boolean }, user_optional: UserOptional) => {
+        acc[user_optional.user_optional_id] = false;
+        return acc;
+      }, {});
+      setCheckedOpcionais(initialCheckedState);
       console.log("Dados carregados com sucesso");
     } catch (error) {
       console.error('Erro ao buscar opcionais do usuário:', error);
@@ -136,7 +141,7 @@ const CustomDropdown = () => {
       ...prevCheckedOpcionais,
       [id]: !prevCheckedOpcionais[id],
     }));
-  console.log(checkedOpcionais)
+    console.log(checkedOpcionais)
   };
 
   const handleTermClick = (id: string) => {
@@ -354,7 +359,7 @@ const CustomDropdown = () => {
       alert('Por favor, insira um número de telefone válido.');
       return;
     }
-    
+
     if (!cepRegex.test(formData.user_address?.cep)) {
       alert('Por favor, insira um CEP válido.');
       return;
@@ -408,7 +413,7 @@ const CustomDropdown = () => {
       <DropdownButton id="dropdown-basic-button" title="Opções" variant="primary">
         <Dropdown.Item onClick={handleShowEditDataModal}>Editar dados</Dropdown.Item>
         <Dropdown.Item
-          onClick={() => { handleShowManageTermsModal(); fetchUserTerms(); fetchUserOptional();}}
+          onClick={() => { handleShowManageTermsModal(); fetchUserTerms(); fetchUserOptional(); }}
         >Gerenciar termos</Dropdown.Item>
         <Dropdown.Item onClick={handleShowChangePasswordModal}>Mudar senha</Dropdown.Item>
         <Dropdown.Item onClick={handleShowDeleteModal}>Excluir dados</Dropdown.Item>
