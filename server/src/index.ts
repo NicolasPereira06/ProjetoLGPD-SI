@@ -19,6 +19,10 @@ import PostUserTerms from './Create/PostUserTerms';
 import createDecryptedUsersView from './ConnectDB/decrypted';
 import PostUserOptional from './Create/PostUserOptional';
 import { GetUserOptional } from './Read/GetUserOptional';
+import PutUserOptional from './Update/PutUserOptional';
+import PostOptional from './Create/PostOptional';
+import PutOptional from './Update/PutOptional';
+import DeleteOptional from './Delete/DeleteOptional';
 
 const app = express();
 const port = 3001;
@@ -108,13 +112,22 @@ app.use('/UserTerms', GetUserTerms())
 app.use('/Optional', GetOptional())
 
 // Create
-app.use('/Optional', PostUserOptional())
+app.use('/Optional', PostOptional())
+
+// Put
+app.use('/Optional', PutOptional())
+
+// Delete
+app.use('/Optional', DeleteOptional())
 
 // -------------------------------------------------
 // CRUD - UserOptional
 
 // Create
-// app.use('/UserOptional', PostUserTerms())
+app.use('/UserOptional', PostUserOptional())
+
+// Put
+app.use('/UserOptional', PutUserOptional())
 
 // Read
 app.use('/UserOptional', GetUserOptional())
