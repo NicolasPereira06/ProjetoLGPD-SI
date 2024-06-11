@@ -363,6 +363,11 @@ function SignUp() {
             }
             const data = await response.json();
             setTerms(data);
+            const initialCheckedState = data.reduce((acc: { [key: string]: boolean }, term: Term) => {
+                acc[term.term_id] = false;
+                return acc;
+            }, {});
+            setCheckedTerms(initialCheckedState);
         } catch (error) {
             console.error(error);
         }
@@ -378,6 +383,11 @@ function SignUp() {
             }
             const data = await response.json();
             setOpcionais(data);
+            const initialCheckedState = data.reduce((acc: { [key: string]: boolean }, optional: Optional) => {
+                acc[optional.optional_id] = false;
+                return acc;
+            }, {});
+            setCheckedOptional(initialCheckedState);
         } catch (error) {
             console.error(error);
         }
