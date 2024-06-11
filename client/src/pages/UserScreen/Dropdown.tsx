@@ -4,10 +4,19 @@ import '../UserScreen/Dropdown.css';
 import { useNavigate } from "react-router-dom";
 
 type UserTerms = {
-  terms_id: string;
-  terms_title: string;
-  terms_content: string;
+  user_term_id: string;
   accepted: boolean;
+  term_id: string;
+  term_title: string;
+  term_content: string;
+}
+
+type UserOptional = {
+  user_optional_id: string;
+  accepted: boolean;
+  optional_id: string;
+  optional_title: string;
+  optional_content: string;
 }
 
 const CustomDropdown = () => {
@@ -29,7 +38,8 @@ const CustomDropdown = () => {
   });
   const [showManageTermsModal, setShowManageTermsModal] = useState(false);
   const [userTerms, setUserTerms] = useState<UserTerms[]>([]);
-  const [checkedTerms, setCheckedTerms] = useState<{ [key: string]: boolean }>({});
+  const [userOpcionais, setUserOpcionais] = useState<UserOptional[]>([]);
+  const [checkedOpcionais, setCheckedOpcionais] = useState<{ [key: string]: boolean }>({});
 
   const navigate = useNavigate()
 
@@ -55,7 +65,7 @@ const CustomDropdown = () => {
         throw new Error('Usuário não identificado');
       }
 
-      const response = await fetch(`http://localhost:3001/UserTerms/GetUserTermsLatestAcceptance/${userId}`, {
+      const response = await fetch(`http://localhost:3001/UserTerms/GetUserTerms/${userId}`, {
         method: 'GET',
       });
 
@@ -71,16 +81,38 @@ const CustomDropdown = () => {
     }
   };
 
-  const registerUserTerms = async (checkedTerms: Record<string, boolean>) => {
-    const user_id = localStorage.getItem('userId');
-    const formData = Object.entries(checkedTerms).map(([terms_id, accepted]) => ({
-      user_id,
-      terms_id,
+  const fetchUserOptional = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        throw new Error('Usuário não identificado');
+      }
+
+      const response = await fetch(`http://localhost:3001/UserOptional/GetUserOptional/${userId}`, {
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao carregar os opcionais');
+      }
+
+      const data = await response.json();
+      setUserOpcionais(data);
+      console.log("Dados carregados com sucesso");
+    } catch (error) {
+      console.error('Erro ao buscar opcionais do usuário:', error);
+    }
+  };
+
+  const UpdateUserOptional = async () => {
+    const formData = Object.entries(checkedOpcionais).map(([user_optional_id, accepted]) => ({
+      user_optional_id,
       accepted
     }));
+    console.log(formData)
     try {
-      const response = await fetch('http://localhost:3001/UserTerms/PostUserTerms', {
-        method: 'POST',
+      const response = await fetch('http://localhost:3001/UserOptional/PutUserOptional', {
+        method: 'Put',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -88,22 +120,23 @@ const CustomDropdown = () => {
       });
 
       if (response.ok) {
-        alert('Vinculado com sucesso');
+        alert('Atualizado com sucesso');
       } else {
         const errorData = await response.json();
-        alert('Erro ao vincular termo: ' + errorData.error);
+        alert('Erro ao atualizar termo: ' + errorData.error);
       }
     } catch (error) {
-      console.error('Erro ao vincular termo:', error);
-      alert('Erro ao vincular termo');
+      console.error('Erro ao atualizar termo:', error);
+      alert('Erro ao atualizar termo');
     }
   };
 
   const handleCheckboxChange = (id: string) => {
-    setCheckedTerms((prevCheckedTerms) => ({
-      ...prevCheckedTerms,
-      [id]: !prevCheckedTerms[id],
+    setCheckedOpcionais((prevCheckedOpcionais) => ({
+      ...prevCheckedOpcionais,
+      [id]: !prevCheckedOpcionais[id],
     }));
+  console.log(checkedOpcionais)
   };
 
   const handleTermClick = (id: string) => {
@@ -375,7 +408,7 @@ const CustomDropdown = () => {
       <DropdownButton id="dropdown-basic-button" title="Opções" variant="primary">
         <Dropdown.Item onClick={handleShowEditDataModal}>Editar dados</Dropdown.Item>
         <Dropdown.Item
-          onClick={() => { handleShowManageTermsModal(); fetchUserTerms(); }}
+          onClick={() => { handleShowManageTermsModal(); fetchUserTerms(); fetchUserOptional();}}
         >Gerenciar termos</Dropdown.Item>
         <Dropdown.Item onClick={handleShowChangePasswordModal}>Mudar senha</Dropdown.Item>
         <Dropdown.Item onClick={handleShowDeleteModal}>Excluir dados</Dropdown.Item>
@@ -562,16 +595,23 @@ const CustomDropdown = () => {
         </Modal.Header>
         <Modal.Body className="custom-modal-body">
           {userTerms.map((term) => (
-            <li className="termField" key={term.terms_id}>
+            <li className="termField" key={term.user_term_id}>
+              <span>
+                {term.term_title} <a href="#" onClick={() => handleTermClick(term.term_id)}>Saiba mais</a>
+              </span>
+            </li>
+          ))}
+          {userOpcionais.map((optional) => (
+            <li className="termField" key={optional.user_optional_id}>
               <input
                 type="checkbox"
                 name="termo"
                 className="inputTerms"
-                checked={!!checkedTerms[term.terms_id]}
-                onChange={() => { handleCheckboxChange(term.terms_id) }}
+                checked={!!checkedOpcionais[optional.user_optional_id]}
+                onChange={() => { handleCheckboxChange(optional.user_optional_id) }}
               />
               <span>
-                {term.terms_title} <a href="#" onClick={() => handleTermClick(term.terms_id)}>Saiba mais</a>
+                {optional.optional_title} <a href="#" onClick={() => handleTermClick(optional.optional_id)}>Saiba mais</a>
               </span>
             </li>
           ))}
@@ -581,7 +621,7 @@ const CustomDropdown = () => {
             Cancelar
           </Button>
           <Button variant="primary" onClick={() => {
-            registerUserTerms(checkedTerms);
+            UpdateUserOptional();
             handleClose();
           }}>
             Salvar
