@@ -334,7 +334,7 @@ function SignUp() {
             accepted
         }));
         try {
-            const response = await fetch('http://localhost:3001/Optional/PostUserOptional', {
+            const response = await fetch('http://localhost:3001/UserOptional/PostUserOptional', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
