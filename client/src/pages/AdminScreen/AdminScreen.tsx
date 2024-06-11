@@ -32,8 +32,6 @@ const AdminScreen: React.FC = () => {
   };
 
   const handleBackup = () => {
-    console.log('Realizar Backup');
-    // Aqui você pode adicionar a lógica para realizar o backup
   };
 
   const handleManagementTerm = () => {

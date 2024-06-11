@@ -53,9 +53,9 @@ const createDecryptedUsersView = async () => {
       ${viewQuery || 'SELECT NULL AS user_id, NULL AS user_first_name, NULL AS user_last_name, NULL AS user_cpf, NULL AS user_date_birth, NULL AS user_cellphone, NULL AS user_address, NULL AS user_email, NULL AS user_password WHERE 1 = 0'}
     `);
     
-    console.log('View DecryptedUsers criada com sucesso.');
+    console.log('Conectado ao Banco e servidor rodando.');
   } catch (error: any) {
-    console.log('Erro ao criar a View DecryptedUsers:', error.message);
+    console.log('Erro ao sincronizar', error.message);
   }
 };
 

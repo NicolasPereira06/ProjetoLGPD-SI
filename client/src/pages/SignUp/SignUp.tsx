@@ -317,7 +317,6 @@ function SignUp() {
             });
 
             if (response.ok) {
-                alert('Vinculado com sucesso');
             } else {
                 const errorData = await response.json();
                 alert('Erro ao vincular termo: ' + errorData.error);
@@ -344,7 +343,6 @@ function SignUp() {
             });
 
             if (response.ok) {
-                alert('Vinculado com sucesso');
             } else {
                 const errorData = await response.json();
                 alert('Erro ao vincular opicional: ' + errorData.error);
