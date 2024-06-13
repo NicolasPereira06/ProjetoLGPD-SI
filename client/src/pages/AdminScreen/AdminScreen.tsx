@@ -31,8 +31,6 @@ const AdminScreen: React.FC = () => {
     navigate('/login');
   };
 
-  const handleBackup = () => {
-  };
 
   const handleManagementTerm = () => {
     navigate('/managementterm')
@@ -49,7 +47,6 @@ const AdminScreen: React.FC = () => {
                 Opções
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item onClick={handleBackup}>Realizar Backup</Dropdown.Item>
                 <Dropdown.Item onClick={handleManagementTerm}>Gerenciar Termos</Dropdown.Item>
                 <Dropdown.Item className="logout-item" onClick={handleSair}>Sair</Dropdown.Item>
               </Dropdown.Menu>
@@ -60,8 +57,7 @@ const AdminScreen: React.FC = () => {
               <tbody>
                 {userData && userData.map && userData.map((user: any, index: any) => (
                   <tr key={index}>
-                    <th>{user.user_first_name} {user.user_last_name}</th>
-                    <td><Button variant="primary">Restaurar</Button></td>
+                    <th className='linha'>{user.user_first_name} {user.user_last_name}</th>
                   </tr>
                 ))}
               </tbody>

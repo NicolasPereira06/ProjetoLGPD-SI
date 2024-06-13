@@ -55,6 +55,7 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
+
   }
   
   .edit-button {
@@ -85,4 +86,12 @@
 .custom-modal .modal-content {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     /* Sombra mais escura */
+}
+
+.linha {
+  border: 1px solid;
+}
+
+.title{
+  margin-right: 10px;
 }

@@ -78,3 +78,7 @@ td {
 .logout-item {
   color: red; /* Define a cor do texto como vermelho */
 }
+
+.linha {
+  border: 1px solid;
+}

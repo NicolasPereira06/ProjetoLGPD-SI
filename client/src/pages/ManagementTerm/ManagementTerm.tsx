@@ -255,7 +255,7 @@ const ManagementTerm: React.FC = () => {
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
                                 <Dropdown.Item onClick={handleAddTerm}>Adicionar Termo</Dropdown.Item>
-                                <Dropdown.Item onClick={handleManagementBackup}>Gerenciar Backups</Dropdown.Item>
+                                <Dropdown.Item onClick={handleManagementBackup}>Usuários</Dropdown.Item>
                                 <Dropdown.Item className="logout-item" onClick={handleSair}>Sair</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
@@ -266,8 +266,8 @@ const ManagementTerm: React.FC = () => {
                                 {terms.map((term, index) => (
                                     <React.Fragment key={index}>
                                         <tr>
-                                            <th>{term.term_title}</th>
-                                            <td>
+                                            <th className='linha'>{term.term_title}</th>
+                                            <td className='linha'>
                                                 <Dropdown>
                                                     <Dropdown.Toggle variant="primary" id={`dropdown-basic-${index}`}>
                                                         Ações
@@ -282,10 +282,10 @@ const ManagementTerm: React.FC = () => {
                                         </tr>
                                         {opcionais.filter(optional => optional.term_id === term.term_id).map((optional, optionalIndex) => (
                                             <tr key={`${index}-${optionalIndex}`}>
-                                                <td style={{textAlign: 'left'}}>
+                                                <td className='linha' style={{textAlign: 'left'}}>
                                                     {optional.optional_title}
                                                 </td>
-                                                <td>
+                                                <td className='linha'>
                                                     <Dropdown>
                                                         <Dropdown.Toggle variant="primary" id={`dropdown-basic-${index}`}>
                                                             Ações

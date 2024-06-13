@@ -34,54 +34,54 @@ const UserScreen: React.FC = () => {
           </div>
           <div className="table-container">
             <table>
-              <tbody>
+              <tbody >
                 <tr>
-                  <th>Primeiro Nome</th>
-                  <td>{userData.user_first_name}</td>
+                  <th className='linha'>Primeiro Nome</th>
+                  <td className='linha'>{userData.user_first_name}</td>
                 </tr>
                 <tr>
-                  <th>Último Nome</th>
-                  <td>{userData.user_last_name}</td>
+                  <th className='linha'>Último Nome</th>
+                  <td className='linha'>{userData.user_last_name}</td>
                 </tr>
                 <tr>
-                  <th>CPF</th>
-                  <td>{userData.user_cpf}</td>
+                  <th className='linha'>CPF</th>
+                  <td className='linha'>{userData.user_cpf}</td>
                 </tr>
                 <tr>
-                  <th>Data de Nascimento</th>
-                  <td>{userData.user_date_birth}</td>
+                  <th className='linha'>Data de Nascimento</th>
+                  <td className='linha'>{userData.user_date_birth}</td>
                 </tr>
                 <tr>
-                  <th>Telefone</th>
-                  <td>{userData.user_cellphone}</td>
+                  <th className='linha'>Telefone</th>
+                  <td className='linha'>{userData.user_cellphone}</td>
                 </tr>
                 <tr>
-                  <th>Email</th>
-                  <td>{userData.user_email}</td>
+                  <th className='linha'>Email</th>
+                  <td className='linha'>{userData.user_email}</td>
                 </tr>
                 <tr>
-                  <th>Logradouro</th>
-                  <td>{userData.user_address && userData.user_address.logradouro}</td>
+                  <th className='linha'>Logradouro</th>
+                  <td className='linha'>{userData.user_address && userData.user_address.logradouro}</td>
                 </tr>
                 <tr>
-                  <th>Número do Logradouro</th>
-                  <td>{userData.user_address && userData.user_address.numero}</td>
+                  <th className='linha'>Número do Logradouro</th>
+                  <td className='linha'>{userData.user_address && userData.user_address.numero}</td>
                 </tr>
                 <tr>
-                  <th>Bairro</th>
-                  <td>{userData.user_address && userData.user_address.bairro}</td>
+                  <th className='linha'>Bairro</th>
+                  <td className='linha'>{userData.user_address && userData.user_address.bairro}</td>
                 </tr>
                 <tr>
-                  <th>CEP</th>
-                  <td>{userData.user_address && userData.user_address.cep}</td>
+                  <th className='linha'>CEP</th>
+                  <td className='linha'>{userData.user_address && userData.user_address.cep}</td>
                 </tr>
                 <tr>
-                  <th>Cidade</th>
-                  <td>{userData.user_address && userData.user_address.cidade}</td>
+                  <th className='linha'>Cidade</th>
+                  <td className='linha'>{userData.user_address && userData.user_address.cidade}</td>
                 </tr>
                 <tr>
-                  <th>Estado</th>
-                  <td>{userData.user_address && userData.user_address.estado}</td>
+                  <th className='linha'>Estado</th>
+                  <td className='linha'>{userData.user_address && userData.user_address.estado}</td>
                 </tr>
               </tbody>
             </table>

@@ -136,7 +136,7 @@ const CustomDropdown = () => {
     }
   };
 
-  const handleCheckboxChange = (id: string) => {
+  const handleCheckboxChange = (id: string, accepted: boolean) => {
     setCheckedOpcionais((prevCheckedOpcionais) => ({
       ...prevCheckedOpcionais,
       [id]: !prevCheckedOpcionais[id],
@@ -612,8 +612,9 @@ const CustomDropdown = () => {
                 type="checkbox"
                 name="termo"
                 className="inputTerms"
-                checked={!!checkedOpcionais[optional.user_optional_id]}
-                onChange={() => { handleCheckboxChange(optional.user_optional_id) }}
+                // checked={!!checkedOpcionais[optional.user_optional_id]}
+                defaultChecked={optional.accepted}
+                onChange={() => { handleCheckboxChange(optional.user_optional_id, optional.accepted) }}
               />
               <span>
                 {optional.optional_title} <a href="#" onClick={() => handleTermClick(optional.optional_id)}>Saiba mais</a>
