@@ -72,5 +72,5 @@ Alguns Desafios:
 Soluções:
 
 - Criptografia Simétrica.
-- Banco de Dados Espelhado.
+- Banco de Dados Espelhado/Banco de Dados Replicado.
 - Criptografia e Chaves.
