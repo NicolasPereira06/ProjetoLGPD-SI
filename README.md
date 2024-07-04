@@ -68,3 +68,11 @@ Soluções:
 - Criptografia Simétrica.
 - Banco de Dados Espelhado/Banco de Dados Replicado.
 - Criptografia e Chaves.
+
+<h2>Equipe</h2>
+ 
+ Nome|Github|Linkedin 
+-----|------|---------
+Eliézer Lopes       |[@Github](https://github.com/EliezerLopes1)|[@Linkedin](https://www.linkedin.com/in/eli%C3%A9zer-lopes-b89a4124a)
+Nicolas Pereira     |[@Github](https://github.com/NicolasPereira06)|[@Linkedin](https://www.linkedin.com/in/nicolaspereira06/)
+Thalles Torres      |[@Github](https://github.com/thallestorres)|[@Linkedin](www.linkedin.com/in/thalles-torres-83449a285)
